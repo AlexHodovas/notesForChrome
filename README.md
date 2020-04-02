@@ -1,1 +1,1 @@
-[DEMO LINK](https://AlexHodovas.github.io/notes/)
+[DEMO LINK](https://AlexHodovas.github.io/notes)
