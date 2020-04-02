@@ -1,1 +1,2 @@
-[DEMO LINK](https://AlexHodovas.github.io/notes)
+[DEMO LINK](https://alexhodovas.github.io/notesForChrome/)
+
