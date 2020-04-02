@@ -1,0 +1,18 @@
+.panels {
+  display: flex;
+  
+  &__folders {
+    width: 310px;
+    height: 482px;
+    position: relative;
+    padding: 20px;
+    border-right: 1px solid rgb(153, 152, 152);
+    background-color: rgb(228, 226, 229);
+    border-bottom-left-radius: 10px;
+  }
+
+  &__notes {
+    display: flex;
+    width: 100%;
+  }
+}
