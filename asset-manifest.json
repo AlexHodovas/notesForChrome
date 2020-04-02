@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/notes-for-chrome/static/css/main.de61134a.chunk.css",
+    "main.js": "/notes-for-chrome/static/js/main.4f820769.chunk.js",
+    "main.js.map": "/notes-for-chrome/static/js/main.4f820769.chunk.js.map",
+    "runtime-main.js": "/notes-for-chrome/static/js/runtime-main.b43cbfaf.js",
+    "runtime-main.js.map": "/notes-for-chrome/static/js/runtime-main.b43cbfaf.js.map",
+    "static/js/2.a46a341f.chunk.js": "/notes-for-chrome/static/js/2.a46a341f.chunk.js",
+    "static/js/2.a46a341f.chunk.js.map": "/notes-for-chrome/static/js/2.a46a341f.chunk.js.map",
+    "index.html": "/notes-for-chrome/index.html",
+    "precache-manifest.7d6a7a0831e424dd26fb6f9702e60bc0.js": "/notes-for-chrome/precache-manifest.7d6a7a0831e424dd26fb6f9702e60bc0.js",
+    "service-worker.js": "/notes-for-chrome/service-worker.js",
+    "static/css/main.de61134a.chunk.css.map": "/notes-for-chrome/static/css/main.de61134a.chunk.css.map",
+    "static/js/2.a46a341f.chunk.js.LICENSE.txt": "/notes-for-chrome/static/js/2.a46a341f.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.b43cbfaf.js",
+    "static/js/2.a46a341f.chunk.js",
+    "static/css/main.de61134a.chunk.css",
+    "static/js/main.4f820769.chunk.js"
+  ]
+}
