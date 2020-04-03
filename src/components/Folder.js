@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import cn from "classnames";
 import { useDrop } from "react-dnd";
 import { connect } from "react-redux";
-import DeleteFolderButton from "./buttons/DeleteFolderButton";
-import EditFolderNameButton from "./buttons/EditFolderNameButton";
+import Box from "@material-ui/core/Box";
+import DeleteFolderButton from "./buttons/DeleteFolderBtn";
+import EditFolderNameButton from "./buttons/EditFolderNameBtn";
 import ItemTypesForReactDND from "./ItemTypesForReactDND";
+import { styled, makeStyles } from "@material-ui/core/styles";
 
 import {
   getSelectedFolderIdForEditing,
@@ -12,40 +14,58 @@ import {
 } from "../redux/store";
 import {
   changeFolderName,
-  saveFolderIdForEditing,
-  userPressAddFolderButton,
-  userPressEditFolderNameButton,
-  saveItemIdForDeleting
+  saveFolderId,
+  pressEditFolderNameBtn,
+  saveSelectedItemId,
 } from "../redux/actions";
 
 const style = {
   color: "white"
 };
 
-function selectBackgroundColor(isActive, canDrop, folderId) {
-  if (folderId === "folderAllNotes") {
-    return "";
+const useStyles = makeStyles({
+  label: {
+    display: "block",
+    minWidth: 140,
+    fontSize: 14,
+    padding: 5,
+    paddingRight: 0
+  },
+  editFolderNameInput: {
+    fontSize: 14,
+    margin: "5px 0"
+  },
+  folderNameInput: {
+    width: 200,
+    fontSize: 14,
+    marginTop: 10
   }
+});
 
-  if (isActive) {
-    return "darkgreen";
-  } else if (canDrop) {
-    return "darkkhaki";
-  } else {
-    return "";
-  }
+const FolderStyled = styled(Box)({
+  display: "flex",
+  alignItems: "flex-end"
+});
+
+function selectBackgroundColor(isActive, canDrop, folderId) {
+  if (folderId === "folderAllNotes") return "";
+  if (isActive) return "darkgreen";
+  if (canDrop) return "darkkhaki";
+
+  return "";
 }
 
 const Folder = ({
   allowedDropEffect,
   folder,
   changeFolderName,
-  saveFolderIdForEditing,
+  saveFolderId,
   selectedFolderIdForEditing,
   isUserPressEditFolderNameButton,
-  userPressEditFolderNameButtonFromProps,
-  saveItemIdForDeleting
+  pressEditFolderNameBtn,
+  saveSelectedItemId
 }) => {
+  const classes = useStyles();
   const { folderName, folderId } = folder;
   const [newFolderName, setNewFolderName] = useState("");
 
@@ -78,57 +98,59 @@ const Folder = ({
           autoFocus
           placeholder="New Folder"
           defaultValue={folderName}
-          onChange={e => handleInputChange(e.target.value)}
-          onKeyPress={e => {
-            if (e.key === "Enter") {
-              changeFolderName(newFolderName, folderId);
-              userPressEditFolderNameButtonFromProps(false);
-            }
+          onChange={e => {
+            handleInputChange(e.target.value);
+            changeFolderName(newFolderName, folderId);
+          }}
+          onBlur={() => {
+            pressEditFolderNameBtn(false);
           }}
           type="text"
-          className="editFolderNameInput"
+          className={classes.editFolderNameInput}
         />
       </div>
     );
-  } else if (folderId === "folderAllNotes") {
+  }
+
+  if (folderId === "folderAllNotes") {
     return (
       <div style={{ ...style, backgroundColor }}>
         <li
           onClick={() => {
-            saveFolderIdForEditing(folderId);
-            saveItemIdForDeleting(folderId);
+            saveFolderId(folderId);
+            saveSelectedItemId(folderId);
           }}
           className={cn("folder-li", {
             selected: selectedFolderIdForEditing === folderId
           })}
         >
-          <div className="folder">
-            <label className={cn("folder__label")}>{folderName}</label>
-          </div>
-        </li>
-      </div>
-    );
-  } else {
-    return (
-      <div ref={drop} style={{ ...style, backgroundColor }}>
-        <li
-          onClick={() => {
-            saveFolderIdForEditing(folderId);
-            saveItemIdForDeleting(folderId);
-          }}
-          className={cn("folder-li", {
-            selected: selectedFolderIdForEditing === folderId
-          })}
-        >
-          <div className="folder">
-            <label className={cn("folder__label")}>{folderName}</label>
-            <DeleteFolderButton folderId={folderId} />
-            <EditFolderNameButton folderId={folderId} />
-          </div>
+          <FolderStyled>
+            <label className={classes.label}>{folderName}</label>
+          </FolderStyled>
         </li>
       </div>
     );
   }
+
+  return (
+    <div ref={drop} style={{ ...style, backgroundColor }}>
+      <li
+        onClick={() => {
+          saveFolderId(folderId);
+          saveSelectedItemId(folderId);
+        }}
+        className={cn("folder-li", {
+          selected: selectedFolderIdForEditing === folderId
+        })}
+      >
+        <FolderStyled>
+          <label className={classes.label}>{folderName}</label>
+          <DeleteFolderButton folderId={folderId} />
+          <EditFolderNameButton folderId={folderId} />
+        </FolderStyled>
+      </li>
+    </div>
+  );
 };
 
 const mapStateToProps = state => ({
@@ -137,14 +159,11 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  userPressAddFolderButton: value => dispatch(userPressAddFolderButton(value)),
-  userPressEditFolderNameButtonFromProps: value =>
-    dispatch(userPressEditFolderNameButton(value)),
+  pressEditFolderNameBtn: value => dispatch(pressEditFolderNameBtn(value)),
   changeFolderName: (folderName, folderId) =>
     dispatch(changeFolderName(folderName, folderId)),
-  saveFolderIdForEditing: folderId =>
-    dispatch(saveFolderIdForEditing(folderId)),
-  saveItemIdForDeleting: folderId => dispatch(saveItemIdForDeleting(folderId))
+  saveFolderId: folderId => dispatch(saveFolderId(folderId)),
+  saveSelectedItemId: folderId => dispatch(saveSelectedItemId(folderId))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Folder);

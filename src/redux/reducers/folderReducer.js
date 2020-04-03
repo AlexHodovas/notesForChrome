@@ -8,8 +8,8 @@ import {
   DELETE_NOTE_IN_NOTES_IN_THIS_FOLDER,
   DELETE_NOTE_IN_NOTES_IN_THIS_FOLDER_ON_DRAG_END,
   DELETE_SELECTED_ITEM,
-  UPDATE_FOLDER_ALL_NOTES_WHEN_DELETING_ANOTHER_FOLDER
-} from "../actions";
+  UPDATE_FOLDER_ALL,
+} from "../types";
 
 const initialState = [
   {
@@ -176,7 +176,7 @@ const folderReducer = (state = initialState, action) => {
         });
       }
 
-    case UPDATE_FOLDER_ALL_NOTES_WHEN_DELETING_ANOTHER_FOLDER:
+    case UPDATE_FOLDER_ALL:
       return state.map((folder, index) => {
         if (
           index === 0 &&

@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import cn from "classnames";
 import { useDrag } from "react-dnd";
 import { connect } from "react-redux";
-import DeleteNoteButton from "./buttons/DeleteNoteButton";
-import EditNoteNameButton from "./buttons/EditNoteNameButton";
+import Box from "@material-ui/core/Box";
+import { styled, makeStyles } from "@material-ui/core/styles";
+import DeleteNoteBtn from "./buttons/DeleteNoteBtn";
+import EditNoteNameBtn from "./buttons/EditNoteNameBtn";
 import ItemTypesForReactDND from "./ItemTypesForReactDND";
 
 import {
@@ -13,14 +15,35 @@ import {
 } from "../redux/store";
 import {
   changeNoteName,
-  saveNoteIdForEditing,
-  userPressEditNoteNameButton,
-  userPressDoubleClickForNoteBodyEditing,
+  saveNoteId,
+  pressEditNoteNameBtn,
+  openDialog,
   changeNotesInThisFolder,
   changeNoteNameInNotesInThisFolder,
   deleteNoteInNotesInThisFolderOnDragEnd,
-  saveItemIdForDeleting
+  saveSelectedItemId
 } from "../redux/actions";
+
+const NoteWrapper = styled(Box)({
+  display: "flex",
+  width: 300,
+  alignItems: "flex-end"
+});
+
+const useStyles = makeStyles(() => ({
+  editNoteNameInput: {
+    minWidth: 294,
+    fontSize: 14,
+    margin: "5px 0"
+  },
+  noteLabel: {
+    display: "block",
+    minWidth: 220,
+    fontSize: 14,
+    padding: 5,
+    paddingRight: 0
+  }
+}));
 
 const style = {
   backgroundColor: "white"
@@ -30,17 +53,17 @@ const Note = ({
   note,
   changeNoteName,
   isUserPressEditNoteNameButton,
-  saveNoteIdForEditing,
+  saveNoteId,
   selectedNoteIdForEditing,
-  userPressEditNoteNameButtonFromProps,
-  userPressDoubleClickForNoteBodyEditing,
-
+  pressEditNoteNameBtn,
+  openDialog,
   changeNotesInThisFolder,
   changeNoteNameInNotesInThisFolder,
   deleteNoteInNotesInThisFolderOnDragEnd,
   folders,
-  saveItemIdForDeleting
+  saveSelectedItemId
 }) => {
+  const classes = useStyles();
   const { noteName, noteId } = note;
   const [newNoteName, setNewNoteName] = useState("");
 
@@ -93,20 +116,18 @@ const Note = ({
     return (
       <div>
         <input
-          maxLength="20"
           autoFocus
+          maxLength="20"
+          type="text"
           placeholder="New Note"
           defaultValue={noteName}
+          className={classes.editNoteNameInput}
           onChange={e => handleInputChange(e.target.value)}
-          onKeyPress={e => {
-            if (e.key === "Enter") {
-              changeNoteName(newNoteName, noteId);
-              changeNoteNameInNotesInThisFolder(newNoteName, noteId);
-              userPressEditNoteNameButtonFromProps(false);
-            }
+          onBlur={() => {
+            changeNoteName(newNoteName, noteId);
+            changeNoteNameInNotesInThisFolder(newNoteName, noteId);
+            pressEditNoteNameBtn(false);
           }}
-          type="text"
-          className="editNoteNameInput"
         />
       </div>
     );
@@ -114,20 +135,20 @@ const Note = ({
     return (
       <div ref={drag} style={{ ...style, opacity }}>
         <li
-          onDoubleClick={() => userPressDoubleClickForNoteBodyEditing(true)}
+          onDoubleClick={() => openDialog(true)}
           onClick={() => {
-            saveNoteIdForEditing(noteId);
-            saveItemIdForDeleting(noteId);
+            saveNoteId(noteId);
+            saveSelectedItemId(noteId);
           }}
           className={cn("note-li ", {
             selected: selectedNoteIdForEditing === noteId
           })}
         >
-          <div className="note">
-            <label className={cn("note__label")}>{noteName}</label>
-            <DeleteNoteButton noteId={noteId} />
-            <EditNoteNameButton noteId={noteId} />
-          </div>
+          <NoteWrapper>
+            <label className={classes.noteLabel}>{noteName}</label>
+            <DeleteNoteBtn noteId={noteId} />
+            <EditNoteNameBtn noteId={noteId} />
+          </NoteWrapper>
         </li>
       </div>
     );
@@ -142,20 +163,18 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  userPressEditNoteNameButtonFromProps: value =>
-    dispatch(userPressEditNoteNameButton(value)),
+  pressEditNoteNameBtn: value => dispatch(pressEditNoteNameBtn(value)),
   changeNoteName: (noteName, noteId) =>
     dispatch(changeNoteName(noteName, noteId)),
-  saveNoteIdForEditing: noteId => dispatch(saveNoteIdForEditing(noteId)),
-  userPressDoubleClickForNoteBodyEditing: value =>
-    dispatch(userPressDoubleClickForNoteBodyEditing(value)),
+  saveNoteId: noteId => dispatch(saveNoteId(noteId)),
+  openDialog: value => dispatch(openDialog(value)),
   changeNotesInThisFolder: (folderIdOnDragEnd, note) =>
     dispatch(changeNotesInThisFolder(folderIdOnDragEnd, note)),
   changeNoteNameInNotesInThisFolder: (noteName, noteId) =>
     dispatch(changeNoteNameInNotesInThisFolder(noteName, noteId)),
   deleteNoteInNotesInThisFolderOnDragEnd: (folderId, noteId) =>
     dispatch(deleteNoteInNotesInThisFolderOnDragEnd(folderId, noteId)),
-  saveItemIdForDeleting: itemId => dispatch(saveItemIdForDeleting(itemId))
+  saveSelectedItemId: itemId => dispatch(saveSelectedItemId(itemId))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Note);

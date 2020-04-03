@@ -3,16 +3,14 @@ import Button from "@material-ui/core/Button";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import allNotesIdInDeletedFolder from "../../helpers/allNotesIdInDeletedFolder";
 
 import {
   getSelectedItemIdForDeleting,
   getSelectedFolderIdForEditing,
   getFolders
 } from "../../redux/store";
-import {
-  deleteSelectedItem,
-  updateFolderAllNotesWhenDeletingAnotherFolder
-} from "../../redux/actions";
+import { deleteSelectedItem, updateFolderAll } from "../../redux/actions";
 
 const StyledButton = withStyles({
   root: {
@@ -29,37 +27,28 @@ const StyledButton = withStyles({
   }
 })(Button);
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles({
   button: {
     marginTop: 6,
     marginLeft: 8
   }
-}));
+});
 
 const DeleteSelectedItem = ({
   deleteSelectedItem,
   selectedItemIdForDeleting,
   folders,
-  updateFolderAllNotesWhenDeletingAnotherFolder
+  updateFolderAll
 }) => {
   const classes = useStyles();
 
-  const fildAllNotesInFolderThatWillBeDeleting = () => {
-    const folderThatWillBeDeleting = folders.find(
-      folder => folder.folderId === selectedItemIdForDeleting
-    );
-    const noteIdsNotesThanWillBeDeleting = [];
-
-    for (
-      let i = 0;
-      i < folderThatWillBeDeleting.notesInThisFolder.length;
-      i++
-    ) {
-      const note = folderThatWillBeDeleting.notesInThisFolder[i];
-      noteIdsNotesThanWillBeDeleting.push(note.noteId);
+  const checkNeedFolderUpdate = () => {
+    if (selectedItemIdForDeleting.includes("folder")) {
+      updateFolderAll(
+        allNotesIdInDeletedFolder(folders, selectedItemIdForDeleting),
+        "folderAllNotes"
+      );
     }
-
-    return noteIdsNotesThanWillBeDeleting;
   };
 
   return (
@@ -70,13 +59,7 @@ const DeleteSelectedItem = ({
         className={classes.button}
         startIcon={<DeleteForeverIcon />}
         onClick={() => {
-          if (selectedItemIdForDeleting.includes("folder")) {
-            console.log(fildAllNotesInFolderThatWillBeDeleting());
-            updateFolderAllNotesWhenDeletingAnotherFolder(
-              fildAllNotesInFolderThatWillBeDeleting(),
-              "folderAllNotes"
-            );
-          }
+          checkNeedFolderUpdate();
           deleteSelectedItem(selectedItemIdForDeleting);
         }}
       >
@@ -94,16 +77,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   deleteSelectedItem: selectedItemId =>
     dispatch(deleteSelectedItem(selectedItemId)),
-  updateFolderAllNotesWhenDeletingAnotherFolder: (
-    arrayOfIds,
-    folderAllNotesId
-  ) =>
-    dispatch(
-      updateFolderAllNotesWhenDeletingAnotherFolder(
-        arrayOfIds,
-        folderAllNotesId
-      )
-    )
+  updateFolderAll: (arrayOfIds, folderAllNotesId) =>
+    dispatch(updateFolderAll(arrayOfIds, folderAllNotesId))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DeleteSelectedItem);

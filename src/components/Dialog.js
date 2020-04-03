@@ -6,14 +6,15 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import { connect } from "react-redux";
+import findNoteBody from "../helpers/findNoteBody";
 
 import {
-  getIsDialogForNoteBodyEditingOpened,
+  getIsDialogOpened,
   getSelectedNoteIdForEditing,
   getNotes
 } from "../redux/store";
 import {
-  userPressDoubleClickForNoteBodyEditing,
+  openDialog,
   changeNoteBody,
   changeNoteBodyInNotesInThisFolder
 } from "../redux/actions";
@@ -21,8 +22,8 @@ import {
 const DialogForEditingNoteBody = ({
   notes,
   changeNoteBody,
-  isDialogForNoteBodyEditingOpened,
-  userPressDoubleClickForNoteBodyEditing,
+  isDialogOpened,
+  openDialog,
   selectedNoteIdForEditing,
   changeNoteBodyInNotesInThisFolder
 }) => {
@@ -36,8 +37,8 @@ const DialogForEditingNoteBody = ({
   return (
     <div>
       <Dialog
-        open={isDialogForNoteBodyEditingOpened}
-        onClose={() => userPressDoubleClickForNoteBodyEditing(false)}
+        open={isDialogOpened}
+        onClose={() => openDialog(false)}
         aria-labelledby="form-dialog-title"
       >
         <DialogContent>
@@ -46,18 +47,12 @@ const DialogForEditingNoteBody = ({
           </DialogContentText>
           <form noValidate autoComplete="off">
             <TextField
-              id="outlined-multiline-static"
-              label="Note"
-              multiline
               rows="6"
+              multiline
+              label="Note"
               variant="outlined"
-              value={
-                notes.find(note => note.noteId === selectedNoteIdForEditing)
-                  .noteBody === null
-                  ? ""
-                  : notes.find(note => note.noteId === selectedNoteIdForEditing)
-                      .noteBody
-              }
+              id="outlined-multiline-static"
+              value={findNoteBody(notes, selectedNoteIdForEditing)}
               onChange={e => handleTextFieldChange(e.target.value)}
             />
           </form>
@@ -65,7 +60,7 @@ const DialogForEditingNoteBody = ({
         <DialogActions>
           <Button
             onClick={() => {
-              userPressDoubleClickForNoteBodyEditing(false);
+              openDialog(false);
               changeNoteBodyInNotesInThisFolder(
                 newNoteBody,
                 selectedNoteIdForEditing
@@ -82,14 +77,13 @@ const DialogForEditingNoteBody = ({
 };
 
 const mapStateToProps = state => ({
-  isDialogForNoteBodyEditingOpened: getIsDialogForNoteBodyEditingOpened(state),
+  isDialogOpened: getIsDialogOpened(state),
   selectedNoteIdForEditing: getSelectedNoteIdForEditing(state),
   notes: getNotes(state)
 });
 
 const mapDispatchToProps = dispatch => ({
-  userPressDoubleClickForNoteBodyEditing: value =>
-    dispatch(userPressDoubleClickForNoteBodyEditing(value)),
+  openDialog: value => dispatch(openDialog(value)),
   changeNoteBody: (noteBody, noteId) =>
     dispatch(changeNoteBody(noteBody, noteId)),
   changeNoteBodyInNotesInThisFolder: (noteBody, noteId) =>

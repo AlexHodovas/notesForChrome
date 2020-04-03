@@ -1,8 +1,8 @@
-import { SAVE_FOLDER_ID_FOR_EDITING } from "../actions";
+import { SAVE_FOLDER_ID } from "../types";
 
 const saveFolderIdForEditingReducer = (state = 'folderAllNotes', action) => {
   switch (action.type) {
-    case SAVE_FOLDER_ID_FOR_EDITING:
+    case SAVE_FOLDER_ID:
       return action.folderId;
 
     default:

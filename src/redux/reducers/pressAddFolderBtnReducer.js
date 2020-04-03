@@ -1,8 +1,8 @@
-import { USER_PRESS_ADD_FOLDER_BUTTON } from "../actions";
+import { PRESS_ADD_FOLDER_BTN } from "../types";
 
 const pressAddFolderBtnReducer = (state = false, action) => {
   switch (action.type) {
-    case USER_PRESS_ADD_FOLDER_BUTTON:
+    case PRESS_ADD_FOLDER_BTN:
       return action.value;
 
     default:

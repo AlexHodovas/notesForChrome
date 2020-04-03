@@ -1,4 +1,4 @@
-import { HIDE_FOLDERS } from "../actions";
+import { HIDE_FOLDERS } from "../types";
 
 const hideFoldersReducer = (state = false, action) => {
   switch (action.type) {

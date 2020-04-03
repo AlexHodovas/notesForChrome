@@ -5,11 +5,11 @@ import EditIcon from "@material-ui/icons/Edit";
 import { connect } from "react-redux";
 
 import {
-  userPressEditFolderNameButton,
-  saveFolderIdForEditing
+  pressEditFolderNameBtn,
+  saveFolderId
 } from "../../redux/actions";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   root: {
     "& > *": {
       margin: -6
@@ -17,10 +17,10 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const EditFolderNameButton = ({
-  userPressEditFolderNameButton,
+const EditFolderNameBtn = ({
+  pressEditFolderNameBtn,
   folderId,
-  saveFolderIdForEditing
+  saveFolderId
 }) => {
   const classes = useStyles();
 
@@ -28,8 +28,8 @@ const EditFolderNameButton = ({
     <div
       className={classes.root}
       onClick={() => {
-        userPressEditFolderNameButton(true);
-        saveFolderIdForEditing(folderId);
+        pressEditFolderNameBtn(true);
+        saveFolderId(folderId);
       }}
     >
       <IconButton aria-label="delete">
@@ -40,9 +40,8 @@ const EditFolderNameButton = ({
 };
 
 const mapDispatchToProps = dispatch => ({
-  userPressEditFolderNameButton: value =>
-    dispatch(userPressEditFolderNameButton(value)),
-  saveFolderIdForEditing: folderId => dispatch(saveFolderIdForEditing(folderId))
+  pressEditFolderNameBtn: value => dispatch(pressEditFolderNameBtn(value)),
+  saveFolderId: folderId => dispatch(saveFolderId(folderId))
 });
 
-export default connect(null, mapDispatchToProps)(EditFolderNameButton);
+export default connect(null, mapDispatchToProps)(EditFolderNameBtn);

@@ -1,16 +1,27 @@
 import React from "react";
-import DotButtonsSimulation from './buttons/DotButtonsSimulation';
-import HideFoldersButton from './buttons/HideFoldersButton';
-import DeleteSelectedItem from './buttons/DeleteSelectedItem';
-import AddNote from './buttons/AddNote';
+import Box from "@material-ui/core/Box";
+import { styled } from "@material-ui/core/styles";
+import DotButtonsSimulation from "./buttons/DotButtonsSimulation";
+import HideFoldersBtn from "./buttons/HideFoldersBtn";
+import DeleteSelectedItemBtn from "./buttons/DeleteSelectedItemBtn";
+import AddNote from "./buttons/AddNoteBtn";
+
+const AppHeaderWrapper = styled(Box)({
+  display: "flex",
+  backgroundColor: "rgb(228, 226, 229)",
+  height: 38,
+  borderTopRightRadius: 10,
+  borderTopLeftRadius: 10,
+  borderBottom: "1px solid rgb(190, 190, 190)"
+});
 
 const AppHeader = () => (
-  <div className="app-header">
+  <AppHeaderWrapper>
     <DotButtonsSimulation />
-    <HideFoldersButton />
-    <DeleteSelectedItem />
+    <HideFoldersBtn />
+    <DeleteSelectedItemBtn />
     <AddNote />
-  </div>
-)
+  </AppHeaderWrapper>
+);
 
 export default AppHeader;

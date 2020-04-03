@@ -1,9 +1,9 @@
 import {
   ADD_NOTE,
-  CHANGE_NOTE_NAME,
   DELETE_NOTE,
-  CHANGE_NOTE_BODY
-} from "../actions";
+  CHANGE_NOTE_NAME,
+  CHANGE_NOTE_BODY,
+} from "../types";
 
 const noteReducer = (state = [], action) => {
   switch (action.type) {

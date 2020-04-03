@@ -1,28 +1,35 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
+import { makeStyles } from "@material-ui/core/styles";
 import Folder from "./Folder";
-import {
-  getFolders,
-  getIsUserPressAddFolderBtn,
-} from "../redux/store";
+import { getFolders, getIsUserPressAddFolderBtn } from "../redux/store";
 import {
   addFolder,
-  userPressAddFolderButton,
+  pressAddFolderBtn,
   changeFolderName,
-  saveFolderIdForEditing,
+  saveFolderId
 } from "../redux/actions";
+
+const useStyles = makeStyles({
+  input: {
+    width: "96%",
+    display: "block",
+    fontSize: 14
+  }
+});
 
 const Folders = ({
   folders,
   isUserPressAddFolderButton,
-  userPressAddFolderButton,
+  pressAddFolderBtn,
   addFolderFromProps,
-  saveFolderIdForEditing,
+  saveFolderId
 }) => {
+  const classes = useStyles();
   const [currentFolder, setCurrentFolder] = useState({
     folderId: null,
     folderName: null,
-    notesInThisFolder: [],
+    notesInThisFolder: []
   });
 
   const handleInputChange = value => {
@@ -39,9 +46,13 @@ const Folders = ({
     <>
       <div>
         {folders.length > 0 && (
-          <ul className="ul">
+          <ul>
             {folders.map(folder => (
-              <Folder allowedDropEffect="move" folder={folder} key={folder.folderId} />
+              <Folder
+                allowedDropEffect="move"
+                folder={folder}
+                key={folder.folderId}
+              />
             ))}
 
             {isUserPressAddFolderButton && (
@@ -51,15 +62,13 @@ const Folders = ({
                   autoFocus
                   placeholder="New Folder"
                   onChange={e => handleInputChange(e.target.value)}
-                  onKeyPress={e => {
-                    if (e.key === "Enter") {
-                      addFolderFromProps(currentFolder);
-                      userPressAddFolderButton(false);
-                      saveFolderIdForEditing(currentFolder.folderId);
-                    }
+                  onBlur={() => {
+                    addFolderFromProps(currentFolder);
+                    pressAddFolderBtn(false);
+                    saveFolderId(currentFolder.folderId);
                   }}
                   type="text"
-                  className="folderNameInputWhenFoldersLengthMoreThanOne"
+                  className={classes.input}
                 />
               </div>
             )}
@@ -72,16 +81,15 @@ const Folders = ({
 
 const mapStateToProps = state => ({
   folders: getFolders(state),
-  isUserPressAddFolderButton: getIsUserPressAddFolderBtn(state),
+  isUserPressAddFolderButton: getIsUserPressAddFolderBtn(state)
 });
 
 const mapDispatchToProps = dispatch => ({
   addFolderFromProps: folder => dispatch(addFolder(folder)),
-  userPressAddFolderButton: value => dispatch(userPressAddFolderButton(value)),
+  pressAddFolderBtn: value => dispatch(pressAddFolderBtn(value)),
   changeFolderName: (folderName, folderId) =>
     dispatch(changeFolderName(folderName, folderId)),
-  saveFolderIdForEditing: (folderId) =>
-    dispatch(saveFolderIdForEditing(folderId)),
+  saveFolderId: folderId => dispatch(saveFolderId(folderId))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Folders);

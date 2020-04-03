@@ -4,10 +4,7 @@ import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
 import { connect } from "react-redux";
 
-import {
-  userPressEditNoteNameButton,
-  saveNoteIdForEditing
-} from "../../redux/actions";
+import { pressEditNoteNameBtn, saveNoteId } from "../../redux/actions";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -17,22 +14,16 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const EditNoteNameButton = ({
-  noteId,
-  userPressEditNoteNameButton,
-  saveNoteIdForEditing
-}) => {
+const EditNoteNameBtn = ({ noteId, pressEditNoteNameBtn, saveNoteId }) => {
   const classes = useStyles();
 
   return (
     <div
       className={classes.root}
-      onClick={
-        () => {
-          userPressEditNoteNameButton(true);
-          saveNoteIdForEditing(noteId);
-        }
-      }
+      onClick={() => {
+        pressEditNoteNameBtn(true);
+        saveNoteId(noteId);
+      }}
     >
       <IconButton aria-label="delete">
         <EditIcon fontSize="small" />
@@ -42,11 +33,8 @@ const EditNoteNameButton = ({
 };
 
 const mapDispatchToProps = dispatch => ({
-  userPressEditNoteNameButton: value => dispatch(userPressEditNoteNameButton(value)),
-  saveNoteIdForEditing: noteId => dispatch(saveNoteIdForEditing(noteId)),
+  pressEditNoteNameBtn: value => dispatch(pressEditNoteNameBtn(value)),
+  saveNoteId: noteId => dispatch(saveNoteId(noteId))
 });
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(EditNoteNameButton);
+export default connect(null, mapDispatchToProps)(EditNoteNameBtn);

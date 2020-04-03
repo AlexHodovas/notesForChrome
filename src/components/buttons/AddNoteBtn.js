@@ -4,7 +4,7 @@ import { makeStyles, withStyles } from "@material-ui/core/styles";
 import NoteAddIcon from "@material-ui/icons/NoteAdd";
 import { connect } from "react-redux";
 
-import { userPressAddNoteNameButton } from "../../redux/actions";
+import { pressAddNoteNameBtn } from "../../redux/actions";
 
 const StyledButton = withStyles({
   root: {
@@ -21,14 +21,14 @@ const StyledButton = withStyles({
   }
 })(Button);
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   button: {
     marginTop: 6,
     marginLeft: 8
   }
 }));
 
-const AddNote = ({ userPressAddNoteNameButton }) => {
+const AddNote = ({ pressAddNoteNameBtn }) => {
   const classes = useStyles();
 
   return (
@@ -39,7 +39,7 @@ const AddNote = ({ userPressAddNoteNameButton }) => {
         className={classes.button}
         startIcon={<NoteAddIcon />}
         onClick={() => {
-          userPressAddNoteNameButton(true);
+          pressAddNoteNameBtn(true);
         }}
       >
         {""}
@@ -49,8 +49,7 @@ const AddNote = ({ userPressAddNoteNameButton }) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  userPressAddNoteNameButton: value =>
-    dispatch(userPressAddNoteNameButton(value))
+  pressAddNoteNameBtn: value => dispatch(pressAddNoteNameBtn(value))
 });
 
 export default connect(null, mapDispatchToProps)(AddNote);

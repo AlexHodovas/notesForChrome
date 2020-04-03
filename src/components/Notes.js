@@ -1,30 +1,41 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import DialogForEditingNoteBody from "./DialogForEditingNoteBody";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
+import Box from "@material-ui/core/Box";
 import TextField from "@material-ui/core/TextField";
-import ItemTypesForReactDND from "./ItemTypesForReactDND";
+import { makeStyles, withStyles, styled } from "@material-ui/core/styles";
 import Note from "./Note";
+import findNoteBody from "../helpers/findNoteBody";
+import ItemTypesForReactDND from "./ItemTypesForReactDND";
+import Dialog from "./Dialog";
+
 import {
   getNotes,
   getFolders,
   getIsUserPressAddNoteNameBtn,
-  getIsDialogForNoteBodyEditingOpened,
+  getIsDialogOpened,
   getSelectedNoteIdForEditing,
   getIsFoldersHidden,
   getSelectedFolderIdForEditing
 } from "../redux/store";
 import {
   addNote,
-  userPressAddNoteNameButton,
+  pressAddNoteNameBtn,
   changeNoteName,
-  saveNoteIdForEditing,
+  saveNoteId,
   changeNoteBody,
   changeNotesInThisFolder,
   changeNoteBodyInNotesInThisFolder
 } from "../redux/actions";
 
-const useStyles = makeStyles(theme => ({
+const NotesWrapper = styled(Box)({
+  padding: "20px 0 20px 20px"
+});
+
+const NoteBodyWrapper = styled(Box)({
+  borderLeft: "1px solid rgb(153, 152, 152)"
+});
+
+const useStyles = makeStyles(() => ({
   root: {
     "& .MuiTextField-root": {
       margin: 0
@@ -36,6 +47,18 @@ const useStyles = makeStyles(theme => ({
       height: 523,
       borderBottomRightRadius: 10
     }
+  },
+  firstNoteinput: {
+    marginLeft: 20,
+    marginTop: 30,
+    height: 16,
+    width: 240,
+    fontSize: 14
+  },
+  input: {
+    width: "96%",
+    display: "block",
+    fontSize: 14
   }
 }));
 
@@ -51,10 +74,10 @@ const Notes = ({
   notes,
   folders,
   isUserPressAddNoteNameBtn,
-  userPressAddNoteNameButton,
+  pressAddNoteNameBtn,
   addNoteFromProps,
-  isDialogForNoteBodyEditingOpened,
-  saveNoteIdForEditing,
+  isDialogOpened,
+  saveNoteId,
   changeNoteBody,
   selectedNoteIdForEditing,
   isFoldersHidden,
@@ -81,7 +104,7 @@ const Notes = ({
     });
   };
 
-  const handleTextFieldChange = (value, noteId) => {
+  const handleTextFieldChange = value => {
     changeNoteBody(value, selectedNoteIdForEditing);
     changeNoteBodyInNotesInThisFolder(value, selectedNoteIdForEditing);
   };
@@ -93,12 +116,9 @@ const Notes = ({
         folder.folderId === "folderAllNotes"
     );
     const [folder] = folderAllNotes;
+    if (!folder) return false;
 
-    if (folder === undefined) {
-      return false;
-    } else {
-      return true;
-    }
+    return true;
   };
 
   const notesInThisFolder = () => {
@@ -108,145 +128,110 @@ const Notes = ({
       folder => folder.folderId === selectedFolderIdForEditing
     );
     const [folder] = needFolder;
-    if (folder === undefined) {
-      return notesInThisFolderInFolderAll;
-    }
+    if (!folder) return notesInThisFolderInFolderAll;
     const { notesInThisFolder } = folder;
+    if (notesInThisFolder) return notesInThisFolder;
 
-    if (notesInThisFolder !== undefined) {
-      return notesInThisFolder;
-    } else {
-      return [];
-    }
+    return [];
   };
 
   return (
     <>
       {isUserPressAddNoteNameBtn && notesInThisFolder().length < 1 && (
         <input
-          maxLength="30"
           autoFocus
+          type="text"
+          maxLength="30"
           placeholder="New Note"
+          className={classes.firstNoteinput}
           onChange={e => handleInputChange(e.target.value)}
-          onKeyPress={e => {
-            if (e.key === "Enter") {
-              addNoteFromProps(currentNote);
-              userPressAddNoteNameButton(false);
-              setCurrentNote({
-                noteId: null,
-                noteName: null,
-                noteBody: null,
-                type: ItemTypesForReactDND.BOX
-              });
-              saveNoteIdForEditing(currentNote.noteId);
+          onBlur={() => {
+            addNoteFromProps(currentNote);
+            pressAddNoteNameBtn(false);
+            setCurrentNote({
+              noteId: null,
+              noteName: null,
+              noteBody: null,
+              type: ItemTypesForReactDND.BOX
+            });
+            saveNoteId(currentNote.noteId);
 
-              if (isItAllNotesFolder()) {
-                changeNotesInThisFolder("folderAllNotes", currentNote);
-              } else {
-                changeNotesInThisFolder("folderAllNotes", currentNote);
-                changeNotesInThisFolder(
-                  selectedFolderIdForEditing,
-                  currentNote
-                );
-              }
+            if (isItAllNotesFolder()) {
+              changeNotesInThisFolder("folderAllNotes", currentNote);
+            } else {
+              changeNotesInThisFolder("folderAllNotes", currentNote);
+              changeNotesInThisFolder(selectedFolderIdForEditing, currentNote);
             }
           }}
-          type="text"
-          className="firstNoteinput"
         />
       )}
       {notesInThisFolder().length > 0 && (
         <>
-          <div className="notes">
-            <ul className="ul">
+          <NotesWrapper>
+            <ul>
               {notesInThisFolder().map(note => (
                 <Note note={note} key={note.noteId} />
               ))}
               {isUserPressAddNoteNameBtn && (
                 <div>
                   <input
-                    maxLength="20"
                     autoFocus
+                    type="text"
+                    maxLength="30"
                     placeholder="New Note"
+                    className={classes.input}
                     onChange={e => handleInputChange(e.target.value)}
-                    onKeyPress={e => {
-                      if (e.key === "Enter") {
-                        addNoteFromProps(currentNote);
-                        userPressAddNoteNameButton(false);
-                        saveNoteIdForEditing(currentNote.noteId);
+                    onBlur={() => {
+                      addNoteFromProps(currentNote);
+                      pressAddNoteNameBtn(false);
+                      saveNoteId(currentNote.noteId);
 
-                        if (isItAllNotesFolder()) {
-                          changeNotesInThisFolder(
-                            "folderAllNotes",
-                            currentNote
-                          );
-                        } else {
-                          changeNotesInThisFolder(
-                            "folderAllNotes",
-                            currentNote
-                          );
-                          changeNotesInThisFolder(
-                            selectedFolderIdForEditing,
-                            currentNote
-                          );
-                        }
+                      if (isItAllNotesFolder()) {
+                        changeNotesInThisFolder("folderAllNotes", currentNote);
+                      } else {
+                        changeNotesInThisFolder("folderAllNotes", currentNote);
+                        changeNotesInThisFolder(
+                          selectedFolderIdForEditing,
+                          currentNote
+                        );
                       }
                     }}
-                    type="text"
-                    className="folderNameInputWhenFoldersLengthMoreThanOne"
                   />
                 </div>
               )}
             </ul>
-
-            {isDialogForNoteBodyEditingOpened && <DialogForEditingNoteBody />}
-          </div>
+            {isDialogOpened && <Dialog />}
+          </NotesWrapper>
           {notes.find(note => note.noteId === selectedNoteIdForEditing) && (
-            <div className="note__body">
+            <NoteBodyWrapper>
               <form className={classes.root} noValidate autoComplete="off">
                 {!isFoldersHidden && (
                   <TextField
-                    id="outlined-multiline-static"
-                    label="Note"
-                    multiline
                     rows="22"
+                    multiline
+                    label="Note"
                     variant="outlined"
+                    id="outlined-multiline-static"
                     className={classes.root}
-                    value={
-                      notes.find(
-                        note => note.noteId === selectedNoteIdForEditing
-                      ).noteBody === null
-                        ? ""
-                        : notes.find(
-                            note => note.noteId === selectedNoteIdForEditing
-                          ).noteBody
-                    }
+                    value={findNoteBody(notes, selectedNoteIdForEditing)}
                     onChange={e => handleTextFieldChange(e.target.value)}
                   />
                 )}
 
                 {isFoldersHidden && (
                   <StyledTextFieldWhenFoldersHidden
-                    id="outlined-multiline-static"
-                    label="Note"
-                    multiline
                     rows="22"
+                    multiline
+                    label="Note"
                     variant="outlined"
+                    id="outlined-multiline-static"
                     className={classes.root}
-                    value={
-                      notes.find(
-                        note => note.noteId === selectedNoteIdForEditing
-                      ).noteBody === null
-                        ? ""
-                        : notes.find(
-                            note => note.noteId === selectedNoteIdForEditing
-                          ).noteBody
-                    }
+                    value={findNoteBody(notes, selectedNoteIdForEditing)}
                     onChange={e => handleTextFieldChange(e.target.value)}
                   />
                 )}
               </form>
-            </div>
+            </NoteBodyWrapper>
           )}
         </>
       )}
@@ -258,7 +243,7 @@ const mapStateToProps = state => ({
   notes: getNotes(state),
   folders: getFolders(state),
   isUserPressAddNoteNameBtn: getIsUserPressAddNoteNameBtn(state),
-  isDialogForNoteBodyEditingOpened: getIsDialogForNoteBodyEditingOpened(state),
+  isDialogOpened: getIsDialogOpened(state),
   selectedNoteIdForEditing: getSelectedNoteIdForEditing(state),
   isFoldersHidden: getIsFoldersHidden(state),
   selectedFolderIdForEditing: getSelectedFolderIdForEditing(state)
@@ -266,11 +251,10 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   addNoteFromProps: note => dispatch(addNote(note)),
-  userPressAddNoteNameButton: value =>
-    dispatch(userPressAddNoteNameButton(value)),
+  pressAddNoteNameBtn: value => dispatch(pressAddNoteNameBtn(value)),
   changeFolderName: (noteName, noteId) =>
     dispatch(changeNoteName(noteName, noteId)),
-  saveNoteIdForEditing: noteId => dispatch(saveNoteIdForEditing(noteId)),
+  saveNoteId: noteId => dispatch(saveNoteId(noteId)),
   changeNoteBody: (noteBody, noteId) =>
     dispatch(changeNoteBody(noteBody, noteId)),
   changeNotesInThisFolder: (folderId, note) =>

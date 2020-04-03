@@ -22,14 +22,14 @@ const StyledButton = withStyles({
   }
 })(Button);
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles({
   button: {
     marginTop: 6,
     marginLeft: 150
   }
-}));
+});
 
-const HideFoldersButton = ({ isFoldersHidden, hideFolders }) => {
+const HideFoldersBtn = ({ isFoldersHidden, hideFolders }) => {
   const classes = useStyles();
 
   return (
@@ -54,4 +54,4 @@ const mapDispatchToProps = dispatch => ({
   hideFolders: () => dispatch(hideFolders())
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(HideFoldersButton);
+export default connect(mapStateToProps, mapDispatchToProps)(HideFoldersBtn);

@@ -1,5 +1,4 @@
 import { createStore, combineReducers } from "redux";
-import { loadState, saveState } from "./localStorage";
 
 //reducers
 import hideFoldersReducer from "./reducers/hideFoldersReducer";
@@ -7,14 +6,12 @@ import folderReducer from "./reducers/folderReducer";
 import saveFolderIdReducer from "./reducers/saveFolderIdReducer";
 import pressAddFolderBtnReducer from "./reducers/pressAddFolderBtnReducer";
 import pressEditFolderNameBtnReducer from "./reducers/pressEditFolderNameBtnReducer";
-
 import noteReducer from "./reducers/noteReducer";
 import pressAddNoteNameBtnReducer from "./reducers/pressAddNoteNameBtnReducer";
 import pressEditNoteNameBtnReducer from "./reducers/pressEditNoteNameBtnReducer";
 import saveNoteIdReducer from "./reducers/saveNoteIdReducer";
-
-import saveItemIdForDeletingReducer from "./reducers/saveItemIdForDeletingReducer";
-import isDialogForNoteEditingOpenedReducer from "./reducers/isDialogForNoteEditingOpenedReducer";
+import saveSelectedItemIdReducer from "./reducers/saveSelectedItemIdReducer";
+import dialogReducer from "./reducers/dialogReducer";
 
 // selectors
 export const getIsFoldersHidden = state => state.isFoldersHidden;
@@ -34,8 +31,8 @@ export const getSelectedNoteIdForEditing = state =>
   state.selectedNoteIdForEditing;
 export const getSelectedItemIdForDeleting = state =>
   state.selectedItemIdForDeleting;
-export const getIsDialogForNoteBodyEditingOpened = state =>
-  state.isDialogForNoteBodyEditingOpened;
+export const getIsDialogOpened = state =>
+  state.isDialogOpened;
 
 //rootReducer
 const rootReducer = combineReducers({
@@ -44,37 +41,15 @@ const rootReducer = combineReducers({
   isUserPressAddFolderBtn: pressAddFolderBtnReducer,
   isUserPressEditFolderNameBtn: pressEditFolderNameBtnReducer,
   selectedFolderIdForEditing: saveFolderIdReducer,
-
   notes: noteReducer,
   isUserPressAddNoteNameBtn: pressAddNoteNameBtnReducer,
   isUserPressEditNoteNameBtn: pressEditNoteNameBtnReducer,
   selectedNoteIdForEditing: saveNoteIdReducer,
-
-  selectedItemIdForDeleting: saveItemIdForDeletingReducer,
-  isDialogForNoteBodyEditingOpened: isDialogForNoteEditingOpenedReducer
+  selectedItemIdForDeleting: saveSelectedItemIdReducer,
+  isDialogOpened: dialogReducer,
 });
 
-const persistedState = loadState();
-const store = createStore(rootReducer, persistedState);
-
-store.subscribe(() => {
-  saveState({
-    isFoldersHidden: store.getState().isFoldersHidden,
-    folders: store.getState().folders,
-    isUserPressAddFolderBtn: store.getState().isUserPressAddFolderBtn,
-    isUserPressEditFolderNameBtn: store.getState().isUserPressEditFolderNameBtn,
-    selectedFolderIdForEditing: store.getState().selectedFolderIdForEditing,
-
-    notes: store.getState().notes,
-    isUserPressAddNoteNameBtn: store.getState().isUserPressAddNoteNameBtn,
-    isUserPressEditNoteNameBtn: store.getState().isUserPressEditNoteNameBtn,
-    selectedNoteIdForEditing: store.getState().selectedNoteIdForEditing,
-
-    selectedItemIdForDeleting: store.getState().selectedItemIdForDeleting,
-    isDialogForNoteBodyEditingOpened: store.getState()
-      .isDialogForNoteBodyEditingOpened
-  });
-});
+const store = createStore(rootReducer);
 
 setTimeout(() => {
   console.log("smile :)");

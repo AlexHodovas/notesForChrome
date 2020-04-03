@@ -1,8 +1,8 @@
-import { USER_PRESS_ADD_NOTE_NAME_BUTTON } from "../actions";
+import { PRESS_ADD_NOTE_NAME_BTN } from "../types";
 
 const pressAddNoteNameBtnReducer = (state = false, action) => {
   switch (action.type) {
-    case USER_PRESS_ADD_NOTE_NAME_BUTTON:
+    case PRESS_ADD_NOTE_NAME_BTN:
       return action.value;
 
     default:
