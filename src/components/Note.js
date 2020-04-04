@@ -34,19 +34,52 @@ const useStyles = makeStyles(() => ({
   editNoteNameInput: {
     minWidth: 294,
     fontSize: 14,
-    margin: "5px 0"
+    margin: "5px 0",
+    height: 22,
+
+    ["@media (max-width:599px)"]: {// eslint-disable-line no-useless-computed-key
+      fontSize: 16,
+      width: "78vw",
+      padding: 5,
+      paddingLeft: 20
+    },
+    ["@media (max-width:500px)"]: {// eslint-disable-line no-useless-computed-key
+      width: "90%"
+    },
   },
   noteLabel: {
     display: "block",
     minWidth: 220,
     fontSize: 14,
     padding: 5,
-    paddingRight: 0
+    paddingRight: 0,
+
+    ["@media (max-width:599px)"]: {// eslint-disable-line no-useless-computed-key
+      fontSize: 16,
+      padding: "10px 0 10px 20px",
+      minWidth: "73vw"
+    },
+    ["@media (max-width:500px)"]: {// eslint-disable-line no-useless-computed-key
+      minWidth: "69vw"
+    },
+    ["@media (max-width:440px)"]: {// eslint-disable-line no-useless-computed-key
+      minWidth: "62vw"
+    },
+    ["@media (max-width:360px)"]: {// eslint-disable-line no-useless-computed-key
+      minWidth: "58vw",
+      paddingLeft: 10
+    }
   }
 }));
 
 const style = {
-  backgroundColor: "white"
+  backgroundColor: "white",
+  width: "fit-content"
+};
+
+const styleForMobile = {
+  backgroundColor: "white",
+  width: "100%"
 };
 
 const Note = ({
@@ -61,7 +94,8 @@ const Note = ({
   changeNoteNameInNotesInThisFolder,
   deleteNoteInNotesInThisFolderOnDragEnd,
   folders,
-  saveSelectedItemId
+  saveSelectedItemId,
+  mobile
 }) => {
   const classes = useStyles();
   const { noteName, noteId } = note;
@@ -133,7 +167,10 @@ const Note = ({
     );
   } else {
     return (
-      <div ref={drag} style={{ ...style, opacity }}>
+      <div
+        ref={drag}
+        style={mobile ? { ...styleForMobile, opacity } : { ...style, opacity }}
+      >
         <li
           onDoubleClick={() => openDialog(true)}
           onClick={() => {

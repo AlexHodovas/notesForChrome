@@ -1,3 +1,8 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
 ::-webkit-scrollbar {
   width: 3px;
   height: 3px;
@@ -25,9 +30,22 @@
 
 ul {
   margin: 0;
+  margin-top: 20px;
   overflow-y: scroll;
   height: 420px;
   padding: 0px;
+}
+
+@media (max-width: 820px) {
+  ul {
+    height: 380px;
+  }
+}
+
+@media (max-width: 600px) {
+  ul {
+    height: 280px;
+  }
 }
 
 .selected {
@@ -35,18 +53,10 @@ ul {
   color: white;
 }
 
-.folder-li {
+.folder-li, .note-li {
   margin-bottom: 5px;
 }
 
-.folder-li:first-child {
-  margin-top: 5px;
-}
-
-.note-li {
-  margin-bottom: 5px;
-}
-
-.note-li:first-child {
-  margin-top: 5px;
-}
+// * {
+//   outline: 1px solid red;
+// }

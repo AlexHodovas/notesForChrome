@@ -12,7 +12,11 @@ import {
 const useStyles = makeStyles(() => ({
   root: {
     "& > *": {
-      margin: -6
+      margin: -6,
+
+      ["@media (max-width:599px)"]: {// eslint-disable-line no-useless-computed-key
+        marginLeft: 20,
+      },
     }
   }
 }));
@@ -20,7 +24,7 @@ const useStyles = makeStyles(() => ({
 const EditFolderNameBtn = ({
   pressEditFolderNameBtn,
   folderId,
-  saveFolderId
+  saveFolderId,
 }) => {
   const classes = useStyles();
 

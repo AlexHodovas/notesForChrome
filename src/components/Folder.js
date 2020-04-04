@@ -16,7 +16,7 @@ import {
   changeFolderName,
   saveFolderId,
   pressEditFolderNameBtn,
-  saveSelectedItemId,
+  saveSelectedItemId
 } from "../redux/actions";
 
 const style = {
@@ -29,16 +29,48 @@ const useStyles = makeStyles({
     minWidth: 140,
     fontSize: 14,
     padding: 5,
-    paddingRight: 0
+    paddingRight: 0,
+
+    ["@media (max-width:1040px)"]: {// eslint-disable-line no-useless-computed-key
+      minWidth: "60%"
+    },
+    ["@media (max-width:600px)"]: {// eslint-disable-line no-useless-computed-key
+      maxWidth: "60%"
+    },
+    ["@media (max-width:599px)"]: {// eslint-disable-line no-useless-computed-key
+      fontSize: 16,
+      padding: "10px 0 10px 20px",
+      minWidth: "75%"
+    },
+    ["@media (max-width:500px)"]: {// eslint-disable-line no-useless-computed-key
+      minWidth: "70%"
+    },
+    ["@media (max-width:405px)"]: {// eslint-disable-line no-useless-computed-key
+      minWidth: "65%"
+    },
+    ["@media (max-width:350px)"]: {// eslint-disable-line no-useless-computed-key
+      minWidth: "55%"
+    }
   },
   editFolderNameInput: {
     fontSize: 14,
-    margin: "5px 0"
+    margin: "5px 0",
+    padding: 5,
+
+    ["@media (max-width:599px)"]: {// eslint-disable-line no-useless-computed-key
+      fontSize: 16,
+      width: "94%",
+      paddingLeft: 20
+    },
+    ["@media (max-width:500px)"]: {// eslint-disable-line no-useless-computed-key
+      width: "90%"
+    }
   },
   folderNameInput: {
     width: 200,
     fontSize: 14,
-    marginTop: 10
+    marginTop: 10,
+    padding: 5
   }
 });
 
@@ -63,7 +95,7 @@ const Folder = ({
   selectedFolderIdForEditing,
   isUserPressEditFolderNameButton,
   pressEditFolderNameBtn,
-  saveSelectedItemId
+  saveSelectedItemId,
 }) => {
   const classes = useStyles();
   const { folderName, folderId } = folder;
@@ -115,7 +147,7 @@ const Folder = ({
   if (folderId === "folderAllNotes") {
     return (
       <div style={{ ...style, backgroundColor }}>
-        <li
+        <li style={{ height: "32px", display: "flex" }}
           onClick={() => {
             saveFolderId(folderId);
             saveSelectedItemId(folderId);

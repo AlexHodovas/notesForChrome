@@ -9,7 +9,11 @@ import { pressEditNoteNameBtn, saveNoteId } from "../../redux/actions";
 const useStyles = makeStyles(theme => ({
   root: {
     "& > *": {
-      margin: -6
+      margin: -6,
+
+      ["@media (max-width:599px)"]: {// eslint-disable-line no-useless-computed-key
+        marginLeft: 20,
+      },
     }
   }
 }));

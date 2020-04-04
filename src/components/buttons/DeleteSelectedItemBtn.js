@@ -31,6 +31,11 @@ const useStyles = makeStyles({
   button: {
     marginTop: 6,
     marginLeft: 8
+  },
+  mobileButton: {
+    marginTop: 6,
+    marginLeft: 30,
+    marginRight: 20
   }
 });
 
@@ -38,7 +43,8 @@ const DeleteSelectedItem = ({
   deleteSelectedItem,
   selectedItemIdForDeleting,
   folders,
-  updateFolderAll
+  updateFolderAll,
+  mobile
 }) => {
   const classes = useStyles();
 
@@ -56,7 +62,7 @@ const DeleteSelectedItem = ({
       <StyledButton
         variant="contained"
         color="default"
-        className={classes.button}
+        className={mobile ? classes.mobileButton : classes.button}
         startIcon={<DeleteForeverIcon />}
         onClick={() => {
           checkNeedFolderUpdate();

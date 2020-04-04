@@ -12,10 +12,27 @@ import {
 
 const useStyles = makeStyles({
   input: {
-    width: "96%",
+    width: "92%",
     display: "block",
-    fontSize: 14
-  }
+    fontSize: 14,
+    padding: 5,
+    paddingRigh: 0,
+
+    ['@media (max-width:1040px)']: { // eslint-disable-line no-useless-computed-key
+      width: '90%',
+    },
+  },
+  mobileInput: {
+    width: "94%",
+    display: "block",
+    fontSize: 16,
+    padding: 5,
+    paddingLeft: 20,
+
+    ['@media (max-width:500px)']: { // eslint-disable-line no-useless-computed-key
+      width: '90%',
+    },
+  },
 });
 
 const Folders = ({
@@ -23,7 +40,8 @@ const Folders = ({
   isUserPressAddFolderButton,
   pressAddFolderBtn,
   addFolderFromProps,
-  saveFolderId
+  saveFolderId,
+  mobile,
 }) => {
   const classes = useStyles();
   const [currentFolder, setCurrentFolder] = useState({
@@ -46,12 +64,13 @@ const Folders = ({
     <>
       <div>
         {folders.length > 0 && (
-          <ul>
+          <ul style={{marginTop: '0'}}>
             {folders.map(folder => (
               <Folder
                 allowedDropEffect="move"
                 folder={folder}
                 key={folder.folderId}
+                mobile={mobile}
               />
             ))}
 
@@ -68,7 +87,7 @@ const Folders = ({
                     saveFolderId(currentFolder.folderId);
                   }}
                   type="text"
-                  className={classes.input}
+                  className={ mobile ? classes.mobileInput : classes.input}
                 />
               </div>
             )}

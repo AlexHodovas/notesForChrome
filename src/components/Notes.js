@@ -27,10 +27,6 @@ import {
   changeNoteBodyInNotesInThisFolder
 } from "../redux/actions";
 
-const NotesWrapper = styled(Box)({
-  padding: "20px 0 20px 20px"
-});
-
 const NoteBodyWrapper = styled(Box)({
   borderLeft: "1px solid rgb(153, 152, 152)"
 });
@@ -38,37 +34,112 @@ const NoteBodyWrapper = styled(Box)({
 const useStyles = makeStyles(() => ({
   root: {
     "& .MuiTextField-root": {
-      margin: 0
+      margin: 0,
+      ['@media (max-width:599px)']: { // eslint-disable-line no-useless-computed-key
+        marginTop: 20,
+      },
     },
     "& .MuiOutlinedInput-root": {
       borderRadius: 0,
       paddingTop: 0,
-      width: 410,
+      width: 428,
       height: 523,
-      borderBottomRightRadius: 10
+      borderBottomRightRadius: 10,
+
+      ['@media (max-width:1040px)']: { // eslint-disable-line no-useless-computed-key
+        width: 240
+      },
+      ['@media (max-width:820px)']: { // eslint-disable-line no-useless-computed-key
+        width: 300,
+        height: 120,
+      },
+      ['@media (max-width:600px)']: { // eslint-disable-line no-useless-computed-key
+        width: '54vw',
+        height: 222,
+      },
+      ['@media (max-width:599px)']: { // eslint-disable-line no-useless-computed-key
+        width: '99vw',
+        borderBottomLeftRadius: 10,
+      },
+    },
+    "& .MuiInputBase-inputMultiline": {
+      height: 446,
+
+      ['@media (max-width:820px)']: { // eslint-disable-line no-useless-computed-key
+        paddingTop: 10,
+        height: 80,
+      },
+      ['@media (max-width:600px)']: { // eslint-disable-line no-useless-computed-key
+        paddingTop: 20,
+        height: 176,
+      },
     }
   },
   firstNoteinput: {
-    marginLeft: 20,
-    marginTop: 30,
-    height: 16,
+    marginTop: 20,
     width: 240,
-    fontSize: 14
+    height: 26,
+    fontSize: 14,
+
+    ['@media (max-width:599px)']: { // eslint-disable-line no-useless-computed-key
+      width: "94%",
+      display: "block",
+      fontSize: 16,
+      padding: 5,
+      paddingLeft: 20,
+    },
+    ['@media (max-width:460px)']: { // eslint-disable-line no-useless-computed-key
+      width: '88vw',
+    },
+    ['@media (max-width:360px)']: { // eslint-disable-line no-useless-computed-key
+      width: '86vw',
+    },
   },
   input: {
     width: "96%",
     display: "block",
-    fontSize: 14
+    fontSize: 14,
+    height: 26,
+
+    ['@media (max-width:599px)']: { // eslint-disable-line no-useless-computed-key
+      width: "94%",
+      display: "block",
+      fontSize: 16,
+      padding: 5,
+      paddingLeft: 20,
+    },
+    ['@media (max-width:500px)']: { // eslint-disable-line no-useless-computed-key
+      width: '88vw',
+    },
   }
 }));
 
-const StyledTextFieldWhenFoldersHidden = withStyles({
+const StyledTextFieldWhenFoldersHidden = withStyles(() => ({
   root: {
     "& .MuiOutlinedInput-root": {
-      width: 677
+      width: 698,
+
+      ['@media (max-width:1040px)']: { // eslint-disable-line no-useless-computed-key
+       width: 497,
+      },
+
+      ['@media (max-width:820px)']: { // eslint-disable-line no-useless-computed-key
+        width: 246,
+        height: 522,
+      },
+
+      ['@media (max-width:600px)']: { // eslint-disable-line no-useless-computed-key
+        width: 261,
+      },
+    },
+
+    "& .MuiInputBase-inputMultiline": {
+      ['@media (max-width:820px)']: { // eslint-disable-line no-useless-computed-key
+        height: 454,
+       },
     }
   }
-})(TextField);
+}))(TextField);
 
 const Notes = ({
   notes,
@@ -83,10 +154,10 @@ const Notes = ({
   isFoldersHidden,
   changeNotesInThisFolder,
   changeNoteBodyInNotesInThisFolder,
-  selectedFolderIdForEditing
+  selectedFolderIdForEditing,
+  mobile,
 }) => {
   const classes = useStyles();
-
   const [currentNote, setCurrentNote] = useState({
     noteId: null,
     noteName: null,
@@ -167,10 +238,10 @@ const Notes = ({
       )}
       {notesInThisFolder().length > 0 && (
         <>
-          <NotesWrapper>
+          <div className={classes.root}>
             <ul>
               {notesInThisFolder().map(note => (
-                <Note note={note} key={note.noteId} />
+                <Note note={note} key={note.noteId} mobile={mobile} />
               ))}
               {isUserPressAddNoteNameBtn && (
                 <div>
@@ -201,7 +272,7 @@ const Notes = ({
               )}
             </ul>
             {isDialogOpened && <Dialog />}
-          </NotesWrapper>
+          </div>
           {notes.find(note => note.noteId === selectedNoteIdForEditing) && (
             <NoteBodyWrapper>
               <form className={classes.root} noValidate autoComplete="off">
@@ -212,7 +283,6 @@ const Notes = ({
                     label="Note"
                     variant="outlined"
                     id="outlined-multiline-static"
-                    className={classes.root}
                     value={findNoteBody(notes, selectedNoteIdForEditing)}
                     onChange={e => handleTextFieldChange(e.target.value)}
                   />
@@ -225,7 +295,6 @@ const Notes = ({
                     label="Note"
                     variant="outlined"
                     id="outlined-multiline-static"
-                    className={classes.root}
                     value={findNoteBody(notes, selectedNoteIdForEditing)}
                     onChange={e => handleTextFieldChange(e.target.value)}
                   />

@@ -5,6 +5,7 @@ import DotButtonsSimulation from "./buttons/DotButtonsSimulation";
 import HideFoldersBtn from "./buttons/HideFoldersBtn";
 import DeleteSelectedItemBtn from "./buttons/DeleteSelectedItemBtn";
 import AddNote from "./buttons/AddNoteBtn";
+import AddFolderBtn from "./buttons/AddFolderBtn";
 
 const AppHeaderWrapper = styled(Box)({
   display: "flex",
@@ -15,11 +16,12 @@ const AppHeaderWrapper = styled(Box)({
   borderBottom: "1px solid rgb(190, 190, 190)"
 });
 
-const AppHeader = () => (
+const AppHeader = ({ mobile }) => (
   <AppHeaderWrapper>
-    <DotButtonsSimulation />
-    <HideFoldersBtn />
-    <DeleteSelectedItemBtn />
+    {!mobile && <DotButtonsSimulation />}
+    {mobile && <AddFolderBtn mobile={mobile} />}
+    {!mobile && <HideFoldersBtn />}
+    <DeleteSelectedItemBtn mobile={mobile} />
     <AddNote />
   </AppHeaderWrapper>
 );
