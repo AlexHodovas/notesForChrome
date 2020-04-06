@@ -5,25 +5,22 @@ import TextField from "@material-ui/core/TextField"
 import { makeStyles, withStyles, styled } from "@material-ui/core/styles"
 import Note from "./Note"
 import findNoteBody from "../helpers/findNoteBody"
-import ItemTypesForReactDND from "./ItemTypesForReactDND"
+import notesInThisFolder from "../helpers/notesInThisFolder"
 import Dialog from "./Dialog"
 
 import {
-  getNotes,
   getFolders,
   getIsUserPressAddNoteNameBtn,
   getIsDialogOpened,
-  getSelectedNoteIdForEditing,
+  getSelectedNoteId,
   getIsFoldersHidden,
-  getSelectedFolderIdForEditing,
+  getSelectedFolderId,
 } from "../redux/store"
 import {
-  addNote,
   pressAddNoteNameBtn,
   saveNoteId,
+  addNote,
   changeNoteBody,
-  changeNotesInThisFolder,
-  changeNoteBodyInNotesInThisFolder,
 } from "../redux/actions"
 
 const NoteBodyWrapper = styled(Box)({
@@ -141,19 +138,16 @@ const StyledTextFieldWhenFoldersHidden = withStyles(() => ({
 }))(TextField)
 
 const Notes = ({
-  notes,
   folders,
   isUserPressAddNoteNameBtn,
   pressAddNoteNameBtn,
-  addNoteFromProps,
   isDialogOpened,
   saveNoteId,
-  changeNoteBody,
-  selectedNoteIdForEditing,
+  selectedNoteId,
   isFoldersHidden,
-  changeNotesInThisFolder,
-  changeNoteBodyInNotesInThisFolder,
-  selectedFolderIdForEditing,
+  addNote,
+  changeNoteBody,
+  selectedFolderId,
   mobile,
 }) => {
   const classes = useStyles()
@@ -161,7 +155,6 @@ const Notes = ({
     noteId: null,
     noteName: null,
     noteBody: null,
-    type: ItemTypesForReactDND.BOX,
   })
 
   const handleInputChange = (value) => {
@@ -175,14 +168,13 @@ const Notes = ({
   }
 
   const handleTextFieldChange = (value) => {
-    changeNoteBody(value, selectedNoteIdForEditing)
-    changeNoteBodyInNotesInThisFolder(value, selectedNoteIdForEditing)
+    changeNoteBody(value, selectedNoteId)
   }
 
   const isItAllNotesFolder = () => {
     const folderAllNotes = folders.filter(
       (folder) =>
-        folder.folderId === selectedFolderIdForEditing &&
+        folder.folderId === selectedFolderId &&
         folder.folderId === "folderAllNotes"
     );
     const [folder] = folderAllNotes
@@ -190,24 +182,11 @@ const Notes = ({
 
     return true
   }
-
-  const notesInThisFolder = () => {
-    const folderAll = folders[0]
-    const notesInThisFolderInFolderAll = folderAll.notesInThisFolder
-    const needFolder = folders.filter(
-      folder => folder.folderId === selectedFolderIdForEditing
-    )
-    const [folder] = needFolder
-    if (!folder) return notesInThisFolderInFolderAll
-    const { notesInThisFolder } = folder
-    if (notesInThisFolder) return notesInThisFolder
-
-    return []
-  }
+  const notes = notesInThisFolder(folders, selectedFolderId);
 
   return (
     <>
-      {isUserPressAddNoteNameBtn && notesInThisFolder().length < 1 && (
+      {isUserPressAddNoteNameBtn && notes.length < 1 && (
         <input
           autoFocus
           type="text"
@@ -217,30 +196,35 @@ const Notes = ({
           onChange={(e) => handleInputChange(e.target.value)}
           onBlur={() => {
             pressAddNoteNameBtn(false)
-            if(currentNote.noteName === null) return
-            addNoteFromProps(currentNote)
+
+            if (
+              currentNote.noteName === null ||
+              currentNote.noteName.trim() === ""
+            ) {
+              return
+            }
+            
             setCurrentNote({
               noteId: null,
               noteName: null,
               noteBody: null,
-              type: ItemTypesForReactDND.BOX
             })
             saveNoteId(currentNote.noteId)
 
             if (isItAllNotesFolder()) {
-              changeNotesInThisFolder("folderAllNotes", currentNote)
+              addNote("folderAllNotes", currentNote)
             } else {
-              changeNotesInThisFolder("folderAllNotes", currentNote)
-              changeNotesInThisFolder(selectedFolderIdForEditing, currentNote)
+              addNote("folderAllNotes", currentNote)
+              addNote(selectedFolderId, currentNote)
             }
           }}
         />
       )}
-      {notesInThisFolder().length > 0 && (
+      {notes.length > 0 && (
         <>
           <div className={classes.root}>
             <ul>
-              {notesInThisFolder().map((note) => (
+              {notes.map((note) => (
                 <Note note={note} key={note.noteId} mobile={mobile} />
               ))}
               {isUserPressAddNoteNameBtn && (
@@ -254,18 +238,20 @@ const Notes = ({
                     onChange={e => handleInputChange(e.target.value)}
                     onBlur={() => {
                       pressAddNoteNameBtn(false)
-                      if(currentNote.noteName === null) return
-                      addNoteFromProps(currentNote)
+
+                      if (
+                        currentNote.noteName === null ||
+                        currentNote.noteName.trim() === ""
+                      ) {
+                        return
+                      }
                       saveNoteId(currentNote.noteId)
 
                       if (isItAllNotesFolder()) {
-                        changeNotesInThisFolder("folderAllNotes", currentNote)
+                        addNote("folderAllNotes", currentNote)
                       } else {
-                        changeNotesInThisFolder("folderAllNotes", currentNote)
-                        changeNotesInThisFolder(
-                          selectedFolderIdForEditing,
-                          currentNote
-                        )
+                        addNote("folderAllNotes", currentNote)
+                        addNote(selectedFolderId,currentNote)
                       }
                     }}
                   />
@@ -274,7 +260,7 @@ const Notes = ({
             </ul>
             {isDialogOpened && <Dialog />}
           </div>
-          {notes.find((note) => note.noteId === selectedNoteIdForEditing) && (
+          {notes.find((note) => note.noteId === selectedNoteId) && (
             <NoteBodyWrapper>
               <form className={classes.root} noValidate autoComplete="off">
                 {!isFoldersHidden && (
@@ -284,7 +270,7 @@ const Notes = ({
                     label="Note"
                     variant="outlined"
                     id="outlined-multiline-static"
-                    value={findNoteBody(notes, selectedNoteIdForEditing)}
+                    value={findNoteBody(notes, selectedNoteId)}
                     onChange={(e) => handleTextFieldChange(e.target.value)}
                   />
                 )}
@@ -296,7 +282,7 @@ const Notes = ({
                     label="Note"
                     variant="outlined"
                     id="outlined-multiline-static"
-                    value={findNoteBody(notes, selectedNoteIdForEditing)}
+                    value={findNoteBody(notes, selectedNoteId)}
                     onChange={(e) => handleTextFieldChange(e.target.value)}
                   />
                 )}
@@ -310,25 +296,19 @@ const Notes = ({
 };
 
 const mapStateToProps = (state) => ({
-  notes: getNotes(state),
   folders: getFolders(state),
   isUserPressAddNoteNameBtn: getIsUserPressAddNoteNameBtn(state),
   isDialogOpened: getIsDialogOpened(state),
-  selectedNoteIdForEditing: getSelectedNoteIdForEditing(state),
   isFoldersHidden: getIsFoldersHidden(state),
-  selectedFolderIdForEditing: getSelectedFolderIdForEditing(state),
+  selectedFolderId: getSelectedFolderId(state),
+  selectedNoteId: getSelectedNoteId(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  addNoteFromProps: (note) => dispatch(addNote(note)),
   pressAddNoteNameBtn: (value) => dispatch(pressAddNoteNameBtn(value)),
   saveNoteId: (noteId) => dispatch(saveNoteId(noteId)),
-  changeNoteBody: (noteBody, noteId) =>
-    dispatch(changeNoteBody(noteBody, noteId)),
-  changeNotesInThisFolder: (folderId, note) =>
-    dispatch(changeNotesInThisFolder(folderId, note)),
-  changeNoteBodyInNotesInThisFolder: (noteBody, noteId) =>
-    dispatch(changeNoteBodyInNotesInThisFolder(noteBody, noteId)),
+  addNote: (folderId, note) => dispatch(addNote(folderId, note)),
+  changeNoteBody: (noteBody, noteId) => dispatch(changeNoteBody(noteBody, noteId)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Notes)

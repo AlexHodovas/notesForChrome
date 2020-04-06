@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React from "react"
 import TextField from "@material-ui/core/TextField"
 import Dialog from "@material-ui/core/Dialog"
 import DialogContent from "@material-ui/core/DialogContent"
@@ -6,41 +6,35 @@ import DialogContentText from "@material-ui/core/DialogContentText"
 import { connect } from "react-redux"
 import findNoteBody from "../helpers/findNoteBody"
 import findNoteName from "../helpers/findNoteName"
+import notesInThisFolder from "../helpers/notesInThisFolder"
 
 import {
   getIsDialogOpened,
-  getSelectedNoteIdForEditing,
-  getNotes,
+  getSelectedFolderId,
+  getSelectedNoteId,
+  getFolders,
 } from "../redux/store"
 import {
   openDialog,
-  changeNoteBody,
   changeNoteName,
-  changeNoteBodyInNotesInThisFolder,
-  changeNoteNameInNotesInThisFolder,
+  changeNoteBody,
 } from "../redux/actions"
 
-const DialogForEditingNoteBody = ({
-  notes,
-  changeNoteBody,
-  changeNoteName,
+const DialogForEditingNote = ({
+  folders,
   isDialogOpened,
   openDialog,
-  selectedNoteIdForEditing,
-  changeNoteBodyInNotesInThisFolder,
-  changeNoteNameInNotesInThisFolder,
+  selectedNoteId,
+  changeNoteBody,
+  changeNoteName,
+  selectedFolderId,
 }) => {
-  const [newNoteBody, setNewNoteBody] = useState("")
-  const [newNoteName, setNewNoteName] = useState("")
-
   const handleNoteBodyChanging = (value) => {
-    setNewNoteBody(value)
-    changeNoteBody(value, selectedNoteIdForEditing)
+    changeNoteBody(value, selectedNoteId)
   }
 
   const handleNoteNameChanging = (value) => {
-    setNewNoteName(value)
-    changeNoteName(value, selectedNoteIdForEditing)
+    changeNoteName(value, selectedNoteId)
   }
 
   return (
@@ -56,20 +50,7 @@ const DialogForEditingNoteBody = ({
             noValidate
             autoComplete="off"
             style={{ display: "flex", flexDirection: "column" }}
-            onBlur={() => {
-              openDialog(false)
-              if (newNoteName === "") return
-
-              changeNoteNameInNotesInThisFolder(
-                newNoteName,
-                selectedNoteIdForEditing
-              )
-
-              changeNoteBodyInNotesInThisFolder(
-                newNoteBody,
-                selectedNoteIdForEditing
-              )
-            }}
+            onBlur={() => {openDialog(false)}}
           >
             <TextField
               rows="2"
@@ -77,7 +58,9 @@ const DialogForEditingNoteBody = ({
               label="Note name"
               variant="outlined"
               id="outlined-multiline-static"
-              value={findNoteName(notes, selectedNoteIdForEditing)}
+              value={findNoteName(
+                notesInThisFolder(folders,selectedFolderId), selectedNoteId
+              )}
               onChange={(e) => handleNoteNameChanging(e.target.value)}
               style={{ marginBottom: "20px" }}
             />
@@ -87,7 +70,9 @@ const DialogForEditingNoteBody = ({
               label="Note"
               variant="outlined"
               id="outlined-multiline-static"
-              value={findNoteBody(notes, selectedNoteIdForEditing)}
+              value={findNoteBody(
+                notesInThisFolder(folders,selectedFolderId), selectedNoteId
+              )}
               onChange={(e) => handleNoteBodyChanging(e.target.value)}
             />
           </form>
@@ -98,24 +83,19 @@ const DialogForEditingNoteBody = ({
 }
 
 const mapStateToProps = (state) => ({
+  folders: getFolders(state),
   isDialogOpened: getIsDialogOpened(state),
-  selectedNoteIdForEditing: getSelectedNoteIdForEditing(state),
-  notes: getNotes(state),
+  selectedNoteId: getSelectedNoteId(state),
+  selectedFolderId: getSelectedFolderId(state),
 })
 
 const mapDispatchToProps = (dispatch) => ({
   openDialog: (value) => dispatch(openDialog(value)),
-  changeNoteBody: (noteBody, noteId) =>
-    dispatch(changeNoteBody(noteBody, noteId)),
-  changeNoteName: (noteName, noteId) =>
-    dispatch(changeNoteName(noteName, noteId)),
-  changeNoteBodyInNotesInThisFolder: (noteBody, noteId) =>
-    dispatch(changeNoteBodyInNotesInThisFolder(noteBody, noteId)),
-  changeNoteNameInNotesInThisFolder: (noteName, noteId) =>
-    dispatch(changeNoteNameInNotesInThisFolder(noteName, noteId)),
+  changeNoteName: (noteName, noteId) => dispatch(changeNoteName(noteName, noteId)),
+  changeNoteBody: (noteBody, noteId) => dispatch(changeNoteBody(noteBody, noteId)),
 })
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(DialogForEditingNoteBody)
+)(DialogForEditingNote)

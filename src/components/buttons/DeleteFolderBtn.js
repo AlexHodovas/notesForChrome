@@ -5,8 +5,7 @@ import DeleteIcon from "@material-ui/icons/Delete"
 import { connect } from "react-redux"
 import allNotesIdInDeletedFolder from "../../helpers/allNotesIdInDeletedFolder"
 import {
-  getSelectedItemIdForDeleting,
-  getSelectedFolderIdForEditing,
+  getSelectedFolderId,
   getFolders,
 } from "../../redux/store"
 import {
@@ -28,16 +27,16 @@ const DeleteFolderButton = ({
   folders,
   updateFolderAll,
   saveFolderId,
-  selectedFolderIdForEditing,
+  selectedFolderId,
 }) => {
   const classes = useStyles()
 
   const checkNeedFolderUpdate = () => {
     if (
-      allNotesIdInDeletedFolder(folders, selectedFolderIdForEditing).length > 0
+      allNotesIdInDeletedFolder(folders, selectedFolderId).length > 0
     ) {
       updateFolderAll(
-        allNotesIdInDeletedFolder(folders, selectedFolderIdForEditing),
+        allNotesIdInDeletedFolder(folders, selectedFolderId),
         "folderAllNotes"
       )
     }
@@ -60,9 +59,8 @@ const DeleteFolderButton = ({
 };
 
 const mapStateToProps = (state) => ({
-  selectedItemIdForDeleting: getSelectedItemIdForDeleting(state),
   folders: getFolders(state),
-  selectedFolderIdForEditing: getSelectedFolderIdForEditing(state),
+  selectedFolderId: getSelectedFolderId(state),
 })
 
 const mapDispatchToProps = (dispatch) => ({

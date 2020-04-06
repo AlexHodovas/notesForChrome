@@ -1,12 +1,12 @@
 import {
   ADD_FOLDER,
+  ADD_NOTE,
   DELETE_FOLDER,
   CHANGE_FOLDER_NAME,
-  CHANGE_NOTES_IN_THIS_FOLDER,
-  CHANGE_NOTE_BODY_IN_NOTES_IN_THIS_FOLDER,
-  CHANGE_NOTE_NAME_IN_NOTES_IN_THIS_FOLDER,
-  DELETE_NOTE_IN_NOTES_IN_THIS_FOLDER,
-  DELETE_NOTE_IN_NOTES_IN_THIS_FOLDER_ON_DRAG_END,
+  CHANGE_NOTE_BODY,
+  CHANGE_NOTE_NAME,
+  DELETE_NOTE,
+  DELETE_NOTE_ON_DRAG_END,
   DELETE_SELECTED_ITEM,
   UPDATE_FOLDER_ALL,
 } from "../types"
@@ -49,7 +49,7 @@ const folderReducer = (state = initialState, action) => {
         }
       })
 
-    case CHANGE_NOTES_IN_THIS_FOLDER:
+    case ADD_NOTE:
       return state.map((folder, index) => {
         if (
           index === 0 &&
@@ -61,17 +61,15 @@ const folderReducer = (state = initialState, action) => {
           }
         }
 
-        if (folder.folderId === action.folderId) {
-          return {
-            ...folder,
-            notesInThisFolder: [...folder.notesInThisFolder, action.note]
-          }
-        } else {
-          return folder
+        if (folder.folderId === action.folderId) return {
+          ...folder,
+          notesInThisFolder: [...folder.notesInThisFolder, action.note]
         }
+
+        return folder
       })
 
-    case DELETE_NOTE_IN_NOTES_IN_THIS_FOLDER_ON_DRAG_END:
+    case DELETE_NOTE_ON_DRAG_END:
       return state.map((folder, index) => {
         if (
           index === 0 &&
@@ -88,12 +86,12 @@ const folderReducer = (state = initialState, action) => {
               (note) => note.noteId !== action.noteId
             )
           }
-        } else {
-          return folder
         }
+
+        return folder
       })
 
-    case CHANGE_NOTE_BODY_IN_NOTES_IN_THIS_FOLDER:
+    case CHANGE_NOTE_BODY:
       return state.map((folder) => {
         return {
           ...folder,
@@ -113,7 +111,7 @@ const folderReducer = (state = initialState, action) => {
         }
       })
 
-    case CHANGE_NOTE_NAME_IN_NOTES_IN_THIS_FOLDER:
+    case CHANGE_NOTE_NAME:
       return state.map((folder) => {
         return {
           ...folder,
@@ -133,7 +131,7 @@ const folderReducer = (state = initialState, action) => {
         }
       })
 
-    case DELETE_NOTE_IN_NOTES_IN_THIS_FOLDER:
+    case DELETE_NOTE:
       return state.map((folder) => {
         if (folder.notesInThisFolder.length === 0) {
           return {
@@ -177,26 +175,19 @@ const folderReducer = (state = initialState, action) => {
       }
 
     case UPDATE_FOLDER_ALL:
-      return state.map((folder, index) => {
-        if (
-          index === 0 &&
-          action.folderAllNotesId === "folderAllNotes" &&
-          action.folderAllNotesId === folder.folderId
-        ) {
+      if(action.arrayOfNotesIdThatWillBeDeleting.length === 0) return state
+       
+      return state.map((folder) => {
+        if (action.folderAllNotesId === "folderAllNotes") {
           return {
             ...folder,
-            notesInThisFolder: folder.notesInThisFolder.filter((note) => {
-              if (
-                action.arrayOfNotesIdThatWillBeDeleting.length > 0 &&
-                !action.arrayOfNotesIdThatWillBeDeleting.includes(note.noteId)
-              ) {
-                return note
-              }
-            })
+            notesInThisFolder: folder.notesInThisFolder.filter(
+              (note) => !action.arrayOfNotesIdThatWillBeDeleting.includes(note.noteId)
+            )
           }
-        } else {
-          return folder
         }
+        return folder
+        
       })
 
     default:

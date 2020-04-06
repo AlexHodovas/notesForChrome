@@ -6,9 +6,8 @@ import DeleteForeverIcon from "@material-ui/icons/DeleteForever"
 import allNotesIdInDeletedFolder from "../../helpers/allNotesIdInDeletedFolder"
 
 import {
-  getSelectedItemIdForDeleting,
-  getSelectedFolderIdForEditing,
   getFolders,
+  getSelectedItemId,
 } from "../../redux/store"
 import { deleteSelectedItem, updateFolderAll } from "../../redux/actions"
 
@@ -41,7 +40,7 @@ const useStyles = makeStyles({
 
 const DeleteSelectedItem = ({
   deleteSelectedItem,
-  selectedItemIdForDeleting,
+  selectedItemId,
   folders,
   updateFolderAll,
   mobile,
@@ -49,9 +48,9 @@ const DeleteSelectedItem = ({
   const classes = useStyles()
 
   const checkNeedFolderUpdate = () => {
-    if (selectedItemIdForDeleting.includes("folder")) {
+    if (selectedItemId.includes("folder")) {
       updateFolderAll(
-        allNotesIdInDeletedFolder(folders, selectedItemIdForDeleting),
+        allNotesIdInDeletedFolder(folders, selectedItemId),
         "folderAllNotes"
       )
     }
@@ -66,7 +65,7 @@ const DeleteSelectedItem = ({
         startIcon={<DeleteForeverIcon />}
         onClick={() => {
           checkNeedFolderUpdate()
-          deleteSelectedItem(selectedItemIdForDeleting)
+          deleteSelectedItem(selectedItemId)
         }}
       >
         {""}
@@ -75,14 +74,12 @@ const DeleteSelectedItem = ({
   )
 }
 const mapStateToProps = (state) => ({
-  selectedItemIdForDeleting: getSelectedItemIdForDeleting(state),
+  selectedItemId: getSelectedItemId(state),
   folders: getFolders(state),
-  selectedFolderIdForEditing: getSelectedFolderIdForEditing(state),
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  deleteSelectedItem: (selectedItemId) =>
-    dispatch(deleteSelectedItem(selectedItemId)),
+  deleteSelectedItem: (selectedItemId) => dispatch(deleteSelectedItem(selectedItemId)),
   updateFolderAll: (arrayOfIds, folderAllNotesId) =>
     dispatch(updateFolderAll(arrayOfIds, folderAllNotesId)),
 })

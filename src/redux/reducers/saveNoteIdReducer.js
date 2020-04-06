@@ -1,6 +1,6 @@
 import { SAVE_NOTE_ID } from "../types"
 
-const saveNoteIdForEditingReducer = (state = "", action) => {
+const saveNoteIdReducer = (state = "", action) => {
   switch (action.type) {
     case SAVE_NOTE_ID:
       return action.noteId
@@ -10,4 +10,4 @@ const saveNoteIdForEditingReducer = (state = "", action) => {
   }
 }
 
-export default saveNoteIdForEditingReducer
+export default saveNoteIdReducer

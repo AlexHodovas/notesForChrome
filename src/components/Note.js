@@ -6,21 +6,19 @@ import Box from "@material-ui/core/Box"
 import { styled, makeStyles } from "@material-ui/core/styles"
 import DeleteNoteBtn from "./buttons/DeleteNoteBtn"
 import EditNoteNameBtn from "./buttons/EditNoteNameBtn"
-import ItemTypesForReactDND from "./ItemTypesForReactDND"
 
 import {
-  getSelectedNoteIdForEditing,
+  getSelectedNoteId,
   getIsUserPressEditNoteNameBtn,
   getFolders,
 } from "../redux/store"
 import {
-  changeNoteName,
   saveNoteId,
   pressEditNoteNameBtn,
   openDialog,
-  changeNotesInThisFolder,
-  changeNoteNameInNotesInThisFolder,
-  deleteNoteInNotesInThisFolderOnDragEnd,
+  addNote,
+  changeNoteName,
+  deleteNoteOnDragEnd,
   saveSelectedItemId,
 } from "../redux/actions"
 
@@ -82,17 +80,18 @@ const styleForMobile = {
   width: "100%",
 }
 
+const itemTypesForReactDND = { BOX: "box" }
+
 const Note = ({
   note,
-  changeNoteName,
   isUserPressEditNoteNameButton,
   saveNoteId,
-  selectedNoteIdForEditing,
+  selectedNoteId,
   pressEditNoteNameBtn,
   openDialog,
-  changeNotesInThisFolder,
-  changeNoteNameInNotesInThisFolder,
-  deleteNoteInNotesInThisFolderOnDragEnd,
+  addNote,
+  changeNoteName,
+  deleteNoteOnDragEnd,
   folders,
   saveSelectedItemId,
   mobile,
@@ -105,7 +104,7 @@ const Note = ({
     setNewNoteName(value)
   }
 
-  const item = { ...note, type: ItemTypesForReactDND.BOX }
+  const item = { ...note, type: itemTypesForReactDND.BOX }
   const [{ opacity }, drag] = useDrag({
     item,
     end(item, monitor) {
@@ -116,7 +115,11 @@ const Note = ({
           dropResult.allowedDropEffect === dropResult.dropEffect
         if (isDropAllowed) {
           // alert(
-          //   `You ${dropResult.dropEffect} noteName - ${noteName} - ${noteId}into ${dropResult.name}!`
+          // `
+          //   You ${dropResult.dropEffect} 
+          //   noteName - ${noteName} - ${noteId}
+          //   into ${dropResult.name}!
+          // `
           // );
           const folderIdOnDragEnd = monitor.getDropResult().name;
           const droppedFolder = folders.find((folder, i) => {
@@ -130,12 +133,9 @@ const Note = ({
           })
 
           if (droppedFolder && droppedFolder.folderId) {
-            deleteNoteInNotesInThisFolderOnDragEnd(
-              droppedFolder.folderId,
-              noteId
-            )
+            deleteNoteOnDragEnd(droppedFolder.folderId,noteId)
           }
-          changeNotesInThisFolder(folderIdOnDragEnd, note)
+          addNote(folderIdOnDragEnd, note)
         }
       }
     },
@@ -144,7 +144,7 @@ const Note = ({
     }),
   })
 
-  if (selectedNoteIdForEditing === noteId && isUserPressEditNoteNameButton) {
+  if (selectedNoteId === noteId && isUserPressEditNoteNameButton) {
     return (
       <div>
         <input
@@ -158,7 +158,6 @@ const Note = ({
           onBlur={() => {
             pressEditNoteNameBtn(false)
             if (newNoteName === "") return
-            changeNoteNameInNotesInThisFolder(newNoteName, noteId)
             changeNoteName(newNoteName, noteId)
           }}
         />
@@ -177,7 +176,7 @@ const Note = ({
             saveSelectedItemId(noteId);
           }}
           className={cn("note-li ", {
-            selected: selectedNoteIdForEditing === noteId,
+            selected: selectedNoteId === noteId,
           })}
         >
           <NoteWrapper>
@@ -193,22 +192,18 @@ const Note = ({
 
 const mapStateToProps = (state) => ({
   isUserPressEditNoteNameButton: getIsUserPressEditNoteNameBtn(state),
-  selectedNoteIdForEditing: getSelectedNoteIdForEditing(state),
+  selectedNoteId: getSelectedNoteId(state),
   folders: getFolders(state),
 })
 
 const mapDispatchToProps = (dispatch) => ({
   pressEditNoteNameBtn: (value) => dispatch(pressEditNoteNameBtn(value)),
-  changeNoteName: (noteName, noteId) =>
-    dispatch(changeNoteName(noteName, noteId)),
   saveNoteId: (noteId) => dispatch(saveNoteId(noteId)),
   openDialog: (value) => dispatch(openDialog(value)),
-  changeNotesInThisFolder: (folderIdOnDragEnd, note) =>
-    dispatch(changeNotesInThisFolder(folderIdOnDragEnd, note)),
-  changeNoteNameInNotesInThisFolder: (noteName, noteId) =>
-    dispatch(changeNoteNameInNotesInThisFolder(noteName, noteId)),
-  deleteNoteInNotesInThisFolderOnDragEnd: (folderId, noteId) =>
-    dispatch(deleteNoteInNotesInThisFolderOnDragEnd(folderId, noteId)),
+  addNote: (folderIdOnDragEnd, note) => dispatch(addNote(folderIdOnDragEnd, note)),
+  changeNoteName: (noteName, noteId) => dispatch(changeNoteName(noteName, noteId)),
+  deleteNoteOnDragEnd: (folderId, noteId) =>
+    dispatch(deleteNoteOnDragEnd(folderId, noteId)),
   saveSelectedItemId: (itemId) => dispatch(saveSelectedItemId(itemId)),
 })
 

@@ -8,6 +8,7 @@ import {
   pressAddFolderBtn,
   changeFolderName,
   saveFolderId,
+  saveSelectedItemId,
 } from "../redux/actions"
 
 const useStyles = makeStyles({
@@ -18,8 +19,8 @@ const useStyles = makeStyles({
     padding: 5,
     paddingRigh: 0,
 
-    ['@media (max-width:1040px)']: { // eslint-disable-line no-useless-computed-key
-      width: '90%',
+    ["@media (max-width:1040px)"]: {// eslint-disable-line no-useless-computed-key
+      width: "90%",
     },
   },
   mobileInput: {
@@ -29,8 +30,8 @@ const useStyles = makeStyles({
     padding: 5,
     paddingLeft: 20,
 
-    ['@media (max-width:500px)']: { // eslint-disable-line no-useless-computed-key
-      width: '90%',
+    ["@media (max-width:500px)"]: {// eslint-disable-line no-useless-computed-key
+      width: "90%",
     },
   },
 })
@@ -39,9 +40,10 @@ const Folders = ({
   folders,
   isUserPressAddFolderButton,
   pressAddFolderBtn,
-  addFolderFromProps,
+  addFolder,
   saveFolderId,
   mobile,
+  saveSelectedItemId,
 }) => {
   const classes = useStyles()
   const [currentFolder, setCurrentFolder] = useState({
@@ -64,8 +66,8 @@ const Folders = ({
     <>
       <div>
         {folders.length > 0 && (
-          <ul style={{marginTop: '0'}}>
-            {folders.map(folder => (
+          <ul style={{ marginTop: "0" }}>
+            {folders.map((folder) => (
               <Folder
                 allowedDropEffect="move"
                 folder={folder}
@@ -83,12 +85,18 @@ const Folders = ({
                   onChange={(e) => handleInputChange(e.target.value)}
                   onBlur={() => {
                     pressAddFolderBtn(false)
-                    if(currentFolder.folderName === null) return
-                    addFolderFromProps(currentFolder)
+                    if (
+                      currentFolder.folderName === null ||
+                      currentFolder.folderName.trim() === ""
+                    ) {
+                      return
+                    }
+                    addFolder(currentFolder)
                     saveFolderId(currentFolder.folderId)
+                    saveSelectedItemId(currentFolder.folderId)
                   }}
                   type="text"
-                  className={ mobile ? classes.mobileInput : classes.input}
+                  className={mobile ? classes.mobileInput : classes.input}
                 />
               </div>
             )}
@@ -105,11 +113,12 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  addFolderFromProps: (folder) => dispatch(addFolder(folder)),
+  addFolder: (folder) => dispatch(addFolder(folder)),
   pressAddFolderBtn: (value) => dispatch(pressAddFolderBtn(value)),
   changeFolderName: (folderName, folderId) =>
     dispatch(changeFolderName(folderName, folderId)),
   saveFolderId: (folderId) => dispatch(saveFolderId(folderId)),
+  saveSelectedItemId: (selectedId) => dispatch(saveSelectedItemId(selectedId)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Folders)

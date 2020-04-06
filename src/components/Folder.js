@@ -6,10 +6,9 @@ import Box from "@material-ui/core/Box"
 import { styled, makeStyles } from "@material-ui/core/styles"
 import DeleteFolderButton from "./buttons/DeleteFolderBtn"
 import EditFolderNameButton from "./buttons/EditFolderNameBtn"
-import ItemTypesForReactDND from "./ItemTypesForReactDND"
 
 import {
-  getSelectedFolderIdForEditing,
+  getSelectedFolderId,
   getIsUserPressEditFolderNameBtn,
 } from "../redux/store"
 import {
@@ -79,20 +78,21 @@ const FolderStyled = styled(Box)({
   alignItems: "flex-end",
 })
 
-function selectBackgroundColor(isActive, canDrop, folderId) {
-  if (folderId === "folderAllNotes") return ""
+function selectBackgroundColor(isActive, canDrop) {
   if (isActive) return "darkgreen"
   if (canDrop) return "darkkhaki"
 
   return ""
 }
 
+const itemTypesForReactDND = { BOX: "box" }
+
 const Folder = ({
   allowedDropEffect,
   folder,
   changeFolderName,
   saveFolderId,
-  selectedFolderIdForEditing,
+  selectedFolderId,
   isUserPressEditFolderNameButton,
   pressEditFolderNameBtn,
   saveSelectedItemId,
@@ -106,7 +106,7 @@ const Folder = ({
   };
 
   const [{ canDrop, isOver }, drop] = useDrop({
-    accept: ItemTypesForReactDND.BOX,
+    accept: itemTypesForReactDND.BOX,
     drop: () => ({
       name: folderId,
       allowedDropEffect,
@@ -117,11 +117,10 @@ const Folder = ({
     })
   })
   const isActive = canDrop && isOver
-  const backgroundColor = selectBackgroundColor(isActive, canDrop, folderId)
+  const backgroundColor = selectBackgroundColor(isActive, canDrop)
 
   if (
-    selectedFolderIdForEditing === folderId &&
-    isUserPressEditFolderNameButton
+    (selectedFolderId === folderId) && isUserPressEditFolderNameButton
   ) {
     return (
       <div>
@@ -154,7 +153,7 @@ const Folder = ({
             saveSelectedItemId(folderId);
           }}
           className={cn("folder-li", {
-            selected: selectedFolderIdForEditing === folderId
+            selected: selectedFolderId === folderId
           })}
         >
           <FolderStyled>
@@ -173,7 +172,7 @@ const Folder = ({
           saveSelectedItemId(folderId);
         }}
         className={cn("folder-li", {
-          selected: selectedFolderIdForEditing === folderId
+          selected: selectedFolderId === folderId
         })}
       >
         <FolderStyled>
@@ -188,7 +187,7 @@ const Folder = ({
 
 const mapStateToProps = (state) => ({
   isUserPressEditFolderNameButton: getIsUserPressEditFolderNameBtn(state),
-  selectedFolderIdForEditing: getSelectedFolderIdForEditing(state),
+  selectedFolderId: getSelectedFolderId(state),
 })
 
 const mapDispatchToProps = (dispatch) => ({
