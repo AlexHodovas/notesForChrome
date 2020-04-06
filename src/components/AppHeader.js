@@ -1,11 +1,11 @@
-import React from "react";
-import Box from "@material-ui/core/Box";
-import { styled } from "@material-ui/core/styles";
-import DotButtonsSimulation from "./buttons/DotButtonsSimulation";
-import HideFoldersBtn from "./buttons/HideFoldersBtn";
-import DeleteSelectedItemBtn from "./buttons/DeleteSelectedItemBtn";
-import AddNote from "./buttons/AddNoteBtn";
-import AddFolderBtn from "./buttons/AddFolderBtn";
+import React from "react"
+import Box from "@material-ui/core/Box"
+import { styled } from "@material-ui/core/styles"
+import DotButtonsSimulation from "./buttons/DotButtonsSimulation"
+import HideFoldersBtn from "./buttons/HideFoldersBtn"
+import DeleteSelectedItemBtn from "./buttons/DeleteSelectedItemBtn"
+import AddNote from "./buttons/AddNoteBtn"
+import AddFolderBtn from "./buttons/AddFolderBtn"
 
 const AppHeaderWrapper = styled(Box)({
   display: "flex",
@@ -14,7 +14,7 @@ const AppHeaderWrapper = styled(Box)({
   borderTopRightRadius: 10,
   borderTopLeftRadius: 10,
   borderBottom: "1px solid rgb(190, 190, 190)"
-});
+})
 
 const AppHeader = ({ mobile }) => (
   <AppHeaderWrapper>
@@ -24,6 +24,6 @@ const AppHeader = ({ mobile }) => (
     <DeleteSelectedItemBtn mobile={mobile} />
     <AddNote />
   </AppHeaderWrapper>
-);
+)
 
-export default AppHeader;
+export default AppHeader

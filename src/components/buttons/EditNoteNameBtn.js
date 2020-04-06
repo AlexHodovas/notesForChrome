@@ -1,12 +1,12 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import IconButton from "@material-ui/core/IconButton";
-import EditIcon from "@material-ui/icons/Edit";
-import { connect } from "react-redux";
+import React from "react"
+import { makeStyles } from "@material-ui/core/styles"
+import IconButton from "@material-ui/core/IconButton"
+import EditIcon from "@material-ui/icons/Edit"
+import { connect } from "react-redux"
 
-import { pressEditNoteNameBtn, saveNoteId } from "../../redux/actions";
+import { pressEditNoteNameBtn, saveNoteId } from "../../redux/actions"
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   root: {
     "& > *": {
       margin: -6,
@@ -14,12 +14,12 @@ const useStyles = makeStyles(theme => ({
       ["@media (max-width:599px)"]: {// eslint-disable-line no-useless-computed-key
         marginLeft: 20,
       },
-    }
-  }
-}));
+    },
+  },
+}))
 
 const EditNoteNameBtn = ({ noteId, pressEditNoteNameBtn, saveNoteId }) => {
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <div
@@ -33,12 +33,12 @@ const EditNoteNameBtn = ({ noteId, pressEditNoteNameBtn, saveNoteId }) => {
         <EditIcon fontSize="small" />
       </IconButton>
     </div>
-  );
-};
+  )
+}
 
-const mapDispatchToProps = dispatch => ({
-  pressEditNoteNameBtn: value => dispatch(pressEditNoteNameBtn(value)),
-  saveNoteId: noteId => dispatch(saveNoteId(noteId))
-});
+const mapDispatchToProps = (dispatch) => ({
+  pressEditNoteNameBtn: (value) => dispatch(pressEditNoteNameBtn(value)),
+  saveNoteId: (noteId) => dispatch(saveNoteId(noteId)),
+})
 
-export default connect(null, mapDispatchToProps)(EditNoteNameBtn);
+export default connect(null, mapDispatchToProps)(EditNoteNameBtn)

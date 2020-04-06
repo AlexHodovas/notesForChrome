@@ -1,13 +1,13 @@
-import { SAVE_FOLDER_ID } from "../types";
+import { SAVE_FOLDER_ID } from "../types"
 
-const saveFolderIdForEditingReducer = (state = 'folderAllNotes', action) => {
+const saveFolderIdForEditingReducer = (state = "folderAllNotes", action) => {
   switch (action.type) {
     case SAVE_FOLDER_ID:
-      return action.folderId;
+      return action.folderId
 
     default:
-      return state;
+      return state
   }
-};
+}
 
-export default saveFolderIdForEditingReducer;
+export default saveFolderIdForEditingReducer

@@ -1,13 +1,13 @@
-import { SAVE_SELECTED_ITEM_ID } from "../types";
+import { SAVE_SELECTED_ITEM_ID } from "../types"
 
-const saveSelectedItemIdReducer = (state = '', action) => {
+const saveSelectedItemIdReducer = (state = "", action) => {
   switch (action.type) {
     case SAVE_SELECTED_ITEM_ID:
-      return action.itemId;
+      return action.itemId
 
     default:
-      return state;
+      return state
   }
-};
+}
 
-export default saveSelectedItemIdReducer;
+export default saveSelectedItemIdReducer

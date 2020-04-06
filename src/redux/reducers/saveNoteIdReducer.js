@@ -1,13 +1,13 @@
-import { SAVE_NOTE_ID } from "../types";
+import { SAVE_NOTE_ID } from "../types"
 
-const saveNoteIdForEditingReducer = (state = '', action) => {
+const saveNoteIdForEditingReducer = (state = "", action) => {
   switch (action.type) {
     case SAVE_NOTE_ID:
-      return action.noteId;
+      return action.noteId
 
     default:
-      return state;
+      return state
   }
-};
+}
 
-export default saveNoteIdForEditingReducer;
+export default saveNoteIdForEditingReducer

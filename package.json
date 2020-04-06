@@ -11,7 +11,6 @@
     "@testing-library/user-event": "^7.1.2",
     "classnames": "^2.2.6",
     "gh-pages": "^2.2.0",
-    "interactjs": "^1.9.7",
     "node-sass": "^4.13.1",
     "react": "^16.13.1",
     "react-debounce-input": "^3.2.2",
@@ -19,11 +18,9 @@
     "react-dnd-html5-backend": "^10.0.2",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.0",
-    "react-resize-panel": "^0.3.5",
     "react-scripts": "3.4.1",
-    "react-split": "^2.0.7",
-    "react-split-pane": "^2.0.3",
-    "redux": "^4.0.5"
+    "redux": "^4.0.5",
+    "redux-devtools-extension": "^2.13.8"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -32,9 +29,6 @@
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
   },
   "browserslist": {
     "production": [
@@ -47,5 +41,12 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "eslint-config-airbnb": "^18.1.0",
+    "eslint-config-prettier": "^6.10.1",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-prettier": "^3.1.2",
+    "prettier": "^2.0.3"
   }
 }

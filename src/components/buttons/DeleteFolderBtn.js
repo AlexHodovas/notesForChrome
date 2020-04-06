@@ -1,26 +1,26 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import IconButton from "@material-ui/core/IconButton";
-import DeleteIcon from "@material-ui/icons/Delete";
-import { connect } from "react-redux";
-import allNotesIdInDeletedFolder from "../../helpers/allNotesIdInDeletedFolder";
+import React from "react"
+import { makeStyles } from "@material-ui/core/styles"
+import IconButton from "@material-ui/core/IconButton"
+import DeleteIcon from "@material-ui/icons/Delete"
+import { connect } from "react-redux"
+import allNotesIdInDeletedFolder from "../../helpers/allNotesIdInDeletedFolder"
 import {
   getSelectedItemIdForDeleting,
   getSelectedFolderIdForEditing,
-  getFolders
-} from "../../redux/store";
+  getFolders,
+} from "../../redux/store"
 import {
   updateFolderAll,
   saveFolderId,
-  deleteFolder
-} from "../../redux/actions";
-const useStyles = makeStyles(theme => ({
+  deleteFolder,
+} from "../../redux/actions"
+const useStyles = makeStyles(() => ({
   root: {
     "& > *": {
-      margin: -6
-    }
-  }
-}));
+      margin: -6,
+    },
+  },
+}))
 
 const DeleteFolderButton = ({
   deleteFolder,
@@ -28,9 +28,9 @@ const DeleteFolderButton = ({
   folders,
   updateFolderAll,
   saveFolderId,
-  selectedFolderIdForEditing
+  selectedFolderIdForEditing,
 }) => {
-  const classes = useStyles();
+  const classes = useStyles()
 
   const checkNeedFolderUpdate = () => {
     if (
@@ -39,17 +39,17 @@ const DeleteFolderButton = ({
       updateFolderAll(
         allNotesIdInDeletedFolder(folders, selectedFolderIdForEditing),
         "folderAllNotes"
-      );
+      )
     }
-  };
+  }
 
   return (
     <div
       className={classes.root}
       onClick={() => {
-        saveFolderId(folderId);
-        checkNeedFolderUpdate();
-        deleteFolder(folderId);
+        saveFolderId(folderId)
+        checkNeedFolderUpdate()
+        deleteFolder(folderId)
       }}
     >
       <IconButton aria-label="delete">
@@ -59,17 +59,17 @@ const DeleteFolderButton = ({
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   selectedItemIdForDeleting: getSelectedItemIdForDeleting(state),
   folders: getFolders(state),
-  selectedFolderIdForEditing: getSelectedFolderIdForEditing(state)
-});
+  selectedFolderIdForEditing: getSelectedFolderIdForEditing(state),
+})
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   updateFolderAll: (arrayOfIds, folderAllNotesId) =>
     dispatch(updateFolderAll(arrayOfIds, folderAllNotesId)),
-  deleteFolder: folderId => dispatch(deleteFolder(folderId)),
-  saveFolderId: folderId => dispatch(saveFolderId(folderId))
-});
+  deleteFolder: (folderId) => dispatch(deleteFolder(folderId)),
+  saveFolderId: (folderId) => dispatch(saveFolderId(folderId)),
+})
 
-export default connect(mapStateToProps, mapDispatchToProps)(DeleteFolderButton);
+export default connect(mapStateToProps, mapDispatchToProps)(DeleteFolderButton)

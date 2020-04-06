@@ -1,27 +1,27 @@
-import React, { useState } from "react";
-import cn from "classnames";
-import { useDrop } from "react-dnd";
-import { connect } from "react-redux";
-import Box from "@material-ui/core/Box";
-import DeleteFolderButton from "./buttons/DeleteFolderBtn";
-import EditFolderNameButton from "./buttons/EditFolderNameBtn";
-import ItemTypesForReactDND from "./ItemTypesForReactDND";
-import { styled, makeStyles } from "@material-ui/core/styles";
+import React, { useState } from "react"
+import cn from "classnames"
+import { useDrop } from "react-dnd"
+import { connect } from "react-redux"
+import Box from "@material-ui/core/Box"
+import { styled, makeStyles } from "@material-ui/core/styles"
+import DeleteFolderButton from "./buttons/DeleteFolderBtn"
+import EditFolderNameButton from "./buttons/EditFolderNameBtn"
+import ItemTypesForReactDND from "./ItemTypesForReactDND"
 
 import {
   getSelectedFolderIdForEditing,
-  getIsUserPressEditFolderNameBtn
-} from "../redux/store";
+  getIsUserPressEditFolderNameBtn,
+} from "../redux/store"
 import {
   changeFolderName,
   saveFolderId,
   pressEditFolderNameBtn,
-  saveSelectedItemId
-} from "../redux/actions";
+  saveSelectedItemId,
+} from "../redux/actions"
 
 const style = {
-  color: "white"
-};
+  color: "white",
+}
 
 const useStyles = makeStyles({
   label: {
@@ -32,24 +32,24 @@ const useStyles = makeStyles({
     paddingRight: 0,
 
     ["@media (max-width:1040px)"]: {// eslint-disable-line no-useless-computed-key
-      minWidth: "60%"
+      minWidth: "60%",
     },
     ["@media (max-width:600px)"]: {// eslint-disable-line no-useless-computed-key
-      maxWidth: "60%"
+      maxWidth: "60%",
     },
     ["@media (max-width:599px)"]: {// eslint-disable-line no-useless-computed-key
       fontSize: 16,
       padding: "10px 0 10px 20px",
-      minWidth: "75%"
+      minWidth: "75%",
     },
     ["@media (max-width:500px)"]: {// eslint-disable-line no-useless-computed-key
-      minWidth: "70%"
+      minWidth: "70%",
     },
     ["@media (max-width:405px)"]: {// eslint-disable-line no-useless-computed-key
-      minWidth: "65%"
+      minWidth: "65%",
     },
     ["@media (max-width:350px)"]: {// eslint-disable-line no-useless-computed-key
-      minWidth: "55%"
+      minWidth: "55%",
     }
   },
   editFolderNameInput: {
@@ -60,31 +60,31 @@ const useStyles = makeStyles({
     ["@media (max-width:599px)"]: {// eslint-disable-line no-useless-computed-key
       fontSize: 16,
       width: "94%",
-      paddingLeft: 20
+      paddingLeft: 20,
     },
     ["@media (max-width:500px)"]: {// eslint-disable-line no-useless-computed-key
-      width: "90%"
+      width: "90%",
     }
   },
   folderNameInput: {
     width: 200,
     fontSize: 14,
     marginTop: 10,
-    padding: 5
-  }
-});
+    padding: 5,
+  },
+})
 
 const FolderStyled = styled(Box)({
   display: "flex",
-  alignItems: "flex-end"
-});
+  alignItems: "flex-end",
+})
 
 function selectBackgroundColor(isActive, canDrop, folderId) {
-  if (folderId === "folderAllNotes") return "";
-  if (isActive) return "darkgreen";
-  if (canDrop) return "darkkhaki";
+  if (folderId === "folderAllNotes") return ""
+  if (isActive) return "darkgreen"
+  if (canDrop) return "darkkhaki"
 
-  return "";
+  return ""
 }
 
 const Folder = ({
@@ -97,27 +97,27 @@ const Folder = ({
   pressEditFolderNameBtn,
   saveSelectedItemId,
 }) => {
-  const classes = useStyles();
-  const { folderName, folderId } = folder;
-  const [newFolderName, setNewFolderName] = useState("");
+  const classes = useStyles()
+  const { folderName, folderId } = folder
+  const [newFolderName, setNewFolderName] = useState("")
 
-  const handleInputChange = value => {
-    setNewFolderName(value);
+  const handleInputChange = (value) => {
+    setNewFolderName(value)
   };
 
   const [{ canDrop, isOver }, drop] = useDrop({
     accept: ItemTypesForReactDND.BOX,
     drop: () => ({
       name: folderId,
-      allowedDropEffect
+      allowedDropEffect,
     }),
-    collect: monitor => ({
+    collect: (monitor) => ({
       isOver: monitor.isOver(),
-      canDrop: monitor.canDrop()
+      canDrop: monitor.canDrop(),
     })
-  });
-  const isActive = canDrop && isOver;
-  const backgroundColor = selectBackgroundColor(isActive, canDrop, folderId);
+  })
+  const isActive = canDrop && isOver
+  const backgroundColor = selectBackgroundColor(isActive, canDrop, folderId)
 
   if (
     selectedFolderIdForEditing === folderId &&
@@ -130,24 +130,25 @@ const Folder = ({
           autoFocus
           placeholder="New Folder"
           defaultValue={folderName}
-          onChange={e => {
-            handleInputChange(e.target.value);
-            changeFolderName(newFolderName, folderId);
+          onChange={(e) => {
+            handleInputChange(e.target.value)
+            changeFolderName(newFolderName, folderId)
           }}
           onBlur={() => {
-            pressEditFolderNameBtn(false);
+            pressEditFolderNameBtn(false)
           }}
           type="text"
           className={classes.editFolderNameInput}
         />
       </div>
-    );
+    )
   }
 
   if (folderId === "folderAllNotes") {
     return (
       <div style={{ ...style, backgroundColor }}>
-        <li style={{ height: "32px", display: "flex" }}
+        <li 
+          style={{ height: "32px", display: "flex" }}
           onClick={() => {
             saveFolderId(folderId);
             saveSelectedItemId(folderId);
@@ -161,7 +162,7 @@ const Folder = ({
           </FolderStyled>
         </li>
       </div>
-    );
+    )
   }
 
   return (
@@ -182,20 +183,20 @@ const Folder = ({
         </FolderStyled>
       </li>
     </div>
-  );
-};
+  )
+}
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   isUserPressEditFolderNameButton: getIsUserPressEditFolderNameBtn(state),
-  selectedFolderIdForEditing: getSelectedFolderIdForEditing(state)
-});
+  selectedFolderIdForEditing: getSelectedFolderIdForEditing(state),
+})
 
-const mapDispatchToProps = dispatch => ({
-  pressEditFolderNameBtn: value => dispatch(pressEditFolderNameBtn(value)),
+const mapDispatchToProps = (dispatch) => ({
+  pressEditFolderNameBtn: (value) => dispatch(pressEditFolderNameBtn(value)),
   changeFolderName: (folderName, folderId) =>
     dispatch(changeFolderName(folderName, folderId)),
-  saveFolderId: folderId => dispatch(saveFolderId(folderId)),
-  saveSelectedItemId: folderId => dispatch(saveSelectedItemId(folderId))
-});
+  saveFolderId: (folderId) => dispatch(saveFolderId(folderId)),
+  saveSelectedItemId: (folderId) => dispatch(saveSelectedItemId(folderId)),
+})
 
-export default connect(mapStateToProps, mapDispatchToProps)(Folder);
+export default connect(mapStateToProps, mapDispatchToProps)(Folder)

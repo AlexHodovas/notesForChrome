@@ -1,13 +1,13 @@
-import { PRESS_ADD_NOTE_NAME_BTN } from "../types";
+import { PRESS_ADD_NOTE_NAME_BTN } from "../types"
 
 const pressAddNoteNameBtnReducer = (state = false, action) => {
   switch (action.type) {
     case PRESS_ADD_NOTE_NAME_BTN:
-      return action.value;
+      return action.value
 
     default:
-      return state;
+      return state
   }
-};
+}
 
-export default pressAddNoteNameBtnReducer;
+export default pressAddNoteNameBtnReducer

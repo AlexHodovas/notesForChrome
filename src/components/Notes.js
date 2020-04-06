@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import { connect } from "react-redux";
-import Box from "@material-ui/core/Box";
-import TextField from "@material-ui/core/TextField";
-import { makeStyles, withStyles, styled } from "@material-ui/core/styles";
-import Note from "./Note";
-import findNoteBody from "../helpers/findNoteBody";
-import ItemTypesForReactDND from "./ItemTypesForReactDND";
-import Dialog from "./Dialog";
+import React, { useState } from "react"
+import { connect } from "react-redux"
+import Box from "@material-ui/core/Box"
+import TextField from "@material-ui/core/TextField"
+import { makeStyles, withStyles, styled } from "@material-ui/core/styles"
+import Note from "./Note"
+import findNoteBody from "../helpers/findNoteBody"
+import ItemTypesForReactDND from "./ItemTypesForReactDND"
+import Dialog from "./Dialog"
 
 import {
   getNotes,
@@ -15,27 +15,26 @@ import {
   getIsDialogOpened,
   getSelectedNoteIdForEditing,
   getIsFoldersHidden,
-  getSelectedFolderIdForEditing
-} from "../redux/store";
+  getSelectedFolderIdForEditing,
+} from "../redux/store"
 import {
   addNote,
   pressAddNoteNameBtn,
-  changeNoteName,
   saveNoteId,
   changeNoteBody,
   changeNotesInThisFolder,
-  changeNoteBodyInNotesInThisFolder
-} from "../redux/actions";
+  changeNoteBodyInNotesInThisFolder,
+} from "../redux/actions"
 
 const NoteBodyWrapper = styled(Box)({
-  borderLeft: "1px solid rgb(153, 152, 152)"
-});
+  borderLeft: "1px solid rgb(153, 152, 152)",
+})
 
 const useStyles = makeStyles(() => ({
   root: {
     "& .MuiTextField-root": {
       margin: 0,
-      ['@media (max-width:599px)']: { // eslint-disable-line no-useless-computed-key
+      ["@media (max-width:599px)"]: { // eslint-disable-line no-useless-computed-key
         marginTop: 20,
       },
     },
@@ -46,30 +45,30 @@ const useStyles = makeStyles(() => ({
       height: 523,
       borderBottomRightRadius: 10,
 
-      ['@media (max-width:1040px)']: { // eslint-disable-line no-useless-computed-key
-        width: 240
+      ["media (max-width:1040px)"]: { // eslint-disable-line no-useless-computed-key
+        width: 240,
       },
-      ['@media (max-width:820px)']: { // eslint-disable-line no-useless-computed-key
+      ["@media (max-width:820px)"]: { // eslint-disable-line no-useless-computed-key
         width: 300,
         height: 120,
       },
-      ['@media (max-width:600px)']: { // eslint-disable-line no-useless-computed-key
-        width: '54vw',
+      ["@media (max-width:600px)"]: { // eslint-disable-line no-useless-computed-key
+        width: "54vw",
         height: 222,
       },
-      ['@media (max-width:599px)']: { // eslint-disable-line no-useless-computed-key
-        width: '99vw',
+      ["@media (max-width:599px)"]: { // eslint-disable-line no-useless-computed-key
+        width: "99vw",
         borderBottomLeftRadius: 10,
       },
     },
     "& .MuiInputBase-inputMultiline": {
       height: 446,
 
-      ['@media (max-width:820px)']: { // eslint-disable-line no-useless-computed-key
+      ["@media (max-width:820px)"]: { // eslint-disable-line no-useless-computed-key
         paddingTop: 10,
         height: 80,
       },
-      ['@media (max-width:600px)']: { // eslint-disable-line no-useless-computed-key
+      ["@media (max-width:600px)"]: { // eslint-disable-line no-useless-computed-key
         paddingTop: 20,
         height: 176,
       },
@@ -81,18 +80,18 @@ const useStyles = makeStyles(() => ({
     height: 26,
     fontSize: 14,
 
-    ['@media (max-width:599px)']: { // eslint-disable-line no-useless-computed-key
+    ["@media (max-width:599px)"]: { // eslint-disable-line no-useless-computed-key
       width: "94%",
       display: "block",
       fontSize: 16,
       padding: 5,
       paddingLeft: 20,
     },
-    ['@media (max-width:460px)']: { // eslint-disable-line no-useless-computed-key
-      width: '88vw',
+    ["@media (max-width:460px)"]: { // eslint-disable-line no-useless-computed-key
+      width: "88vw",
     },
-    ['@media (max-width:360px)']: { // eslint-disable-line no-useless-computed-key
-      width: '86vw',
+    ["@media (max-width:360px)"]: { // eslint-disable-line no-useless-computed-key
+      width: "86vw",
     },
   },
   input: {
@@ -101,15 +100,15 @@ const useStyles = makeStyles(() => ({
     fontSize: 14,
     height: 26,
 
-    ['@media (max-width:599px)']: { // eslint-disable-line no-useless-computed-key
+    ["@media (max-width:599px)"]: { // eslint-disable-line no-useless-computed-key
       width: "94%",
       display: "block",
       fontSize: 16,
       padding: 5,
       paddingLeft: 20,
     },
-    ['@media (max-width:500px)']: { // eslint-disable-line no-useless-computed-key
-      width: '88vw',
+    ["@media (max-width:500px)"]: { // eslint-disable-line no-useless-computed-key
+      width: "88vw",
     },
   }
 }));
@@ -119,27 +118,27 @@ const StyledTextFieldWhenFoldersHidden = withStyles(() => ({
     "& .MuiOutlinedInput-root": {
       width: 698,
 
-      ['@media (max-width:1040px)']: { // eslint-disable-line no-useless-computed-key
+      ["@media (max-width:1040px)"]: { // eslint-disable-line no-useless-computed-key
        width: 497,
       },
 
-      ['@media (max-width:820px)']: { // eslint-disable-line no-useless-computed-key
+      ["@media (max-width:820px)"]: { // eslint-disable-line no-useless-computed-key
         width: 246,
         height: 522,
       },
 
-      ['@media (max-width:600px)']: { // eslint-disable-line no-useless-computed-key
+      ["@media (max-width:600px)"]: { // eslint-disable-line no-useless-computed-key
         width: 261,
       },
     },
 
     "& .MuiInputBase-inputMultiline": {
-      ['@media (max-width:820px)']: { // eslint-disable-line no-useless-computed-key
+      ["@media (max-width:820px)"]: { // eslint-disable-line no-useless-computed-key
         height: 454,
        },
     }
   }
-}))(TextField);
+}))(TextField)
 
 const Notes = ({
   notes,
@@ -157,54 +156,54 @@ const Notes = ({
   selectedFolderIdForEditing,
   mobile,
 }) => {
-  const classes = useStyles();
+  const classes = useStyles()
   const [currentNote, setCurrentNote] = useState({
     noteId: null,
     noteName: null,
     noteBody: null,
-    type: ItemTypesForReactDND.BOX
-  });
+    type: ItemTypesForReactDND.BOX,
+  })
 
-  const handleInputChange = value => {
-    setCurrentNote(prevState => {
+  const handleInputChange = (value) => {
+    setCurrentNote((prevState) => {
       return {
         ...prevState,
         noteId: `noteId-${+new Date()}`,
-        noteName: value
-      };
-    });
-  };
+        noteName: value,
+      }
+    })
+  }
 
-  const handleTextFieldChange = value => {
-    changeNoteBody(value, selectedNoteIdForEditing);
-    changeNoteBodyInNotesInThisFolder(value, selectedNoteIdForEditing);
-  };
+  const handleTextFieldChange = (value) => {
+    changeNoteBody(value, selectedNoteIdForEditing)
+    changeNoteBodyInNotesInThisFolder(value, selectedNoteIdForEditing)
+  }
 
   const isItAllNotesFolder = () => {
     const folderAllNotes = folders.filter(
-      folder =>
+      (folder) =>
         folder.folderId === selectedFolderIdForEditing &&
         folder.folderId === "folderAllNotes"
     );
-    const [folder] = folderAllNotes;
-    if (!folder) return false;
+    const [folder] = folderAllNotes
+    if (!folder) return false
 
-    return true;
-  };
+    return true
+  }
 
   const notesInThisFolder = () => {
-    const folderAll = folders[0];
-    const notesInThisFolderInFolderAll = folderAll.notesInThisFolder;
+    const folderAll = folders[0]
+    const notesInThisFolderInFolderAll = folderAll.notesInThisFolder
     const needFolder = folders.filter(
       folder => folder.folderId === selectedFolderIdForEditing
-    );
-    const [folder] = needFolder;
-    if (!folder) return notesInThisFolderInFolderAll;
-    const { notesInThisFolder } = folder;
-    if (notesInThisFolder) return notesInThisFolder;
+    )
+    const [folder] = needFolder
+    if (!folder) return notesInThisFolderInFolderAll
+    const { notesInThisFolder } = folder
+    if (notesInThisFolder) return notesInThisFolder
 
-    return [];
-  };
+    return []
+  }
 
   return (
     <>
@@ -215,23 +214,24 @@ const Notes = ({
           maxLength="30"
           placeholder="New Note"
           className={classes.firstNoteinput}
-          onChange={e => handleInputChange(e.target.value)}
+          onChange={(e) => handleInputChange(e.target.value)}
           onBlur={() => {
-            addNoteFromProps(currentNote);
-            pressAddNoteNameBtn(false);
+            pressAddNoteNameBtn(false)
+            if(currentNote.noteName === null) return
+            addNoteFromProps(currentNote)
             setCurrentNote({
               noteId: null,
               noteName: null,
               noteBody: null,
               type: ItemTypesForReactDND.BOX
-            });
-            saveNoteId(currentNote.noteId);
+            })
+            saveNoteId(currentNote.noteId)
 
             if (isItAllNotesFolder()) {
-              changeNotesInThisFolder("folderAllNotes", currentNote);
+              changeNotesInThisFolder("folderAllNotes", currentNote)
             } else {
-              changeNotesInThisFolder("folderAllNotes", currentNote);
-              changeNotesInThisFolder(selectedFolderIdForEditing, currentNote);
+              changeNotesInThisFolder("folderAllNotes", currentNote)
+              changeNotesInThisFolder(selectedFolderIdForEditing, currentNote)
             }
           }}
         />
@@ -240,7 +240,7 @@ const Notes = ({
         <>
           <div className={classes.root}>
             <ul>
-              {notesInThisFolder().map(note => (
+              {notesInThisFolder().map((note) => (
                 <Note note={note} key={note.noteId} mobile={mobile} />
               ))}
               {isUserPressAddNoteNameBtn && (
@@ -253,18 +253,19 @@ const Notes = ({
                     className={classes.input}
                     onChange={e => handleInputChange(e.target.value)}
                     onBlur={() => {
-                      addNoteFromProps(currentNote);
-                      pressAddNoteNameBtn(false);
-                      saveNoteId(currentNote.noteId);
+                      pressAddNoteNameBtn(false)
+                      if(currentNote.noteName === null) return
+                      addNoteFromProps(currentNote)
+                      saveNoteId(currentNote.noteId)
 
                       if (isItAllNotesFolder()) {
-                        changeNotesInThisFolder("folderAllNotes", currentNote);
+                        changeNotesInThisFolder("folderAllNotes", currentNote)
                       } else {
-                        changeNotesInThisFolder("folderAllNotes", currentNote);
+                        changeNotesInThisFolder("folderAllNotes", currentNote)
                         changeNotesInThisFolder(
                           selectedFolderIdForEditing,
                           currentNote
-                        );
+                        )
                       }
                     }}
                   />
@@ -273,7 +274,7 @@ const Notes = ({
             </ul>
             {isDialogOpened && <Dialog />}
           </div>
-          {notes.find(note => note.noteId === selectedNoteIdForEditing) && (
+          {notes.find((note) => note.noteId === selectedNoteIdForEditing) && (
             <NoteBodyWrapper>
               <form className={classes.root} noValidate autoComplete="off">
                 {!isFoldersHidden && (
@@ -284,7 +285,7 @@ const Notes = ({
                     variant="outlined"
                     id="outlined-multiline-static"
                     value={findNoteBody(notes, selectedNoteIdForEditing)}
-                    onChange={e => handleTextFieldChange(e.target.value)}
+                    onChange={(e) => handleTextFieldChange(e.target.value)}
                   />
                 )}
 
@@ -296,7 +297,7 @@ const Notes = ({
                     variant="outlined"
                     id="outlined-multiline-static"
                     value={findNoteBody(notes, selectedNoteIdForEditing)}
-                    onChange={e => handleTextFieldChange(e.target.value)}
+                    onChange={(e) => handleTextFieldChange(e.target.value)}
                   />
                 )}
               </form>
@@ -308,28 +309,26 @@ const Notes = ({
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   notes: getNotes(state),
   folders: getFolders(state),
   isUserPressAddNoteNameBtn: getIsUserPressAddNoteNameBtn(state),
   isDialogOpened: getIsDialogOpened(state),
   selectedNoteIdForEditing: getSelectedNoteIdForEditing(state),
   isFoldersHidden: getIsFoldersHidden(state),
-  selectedFolderIdForEditing: getSelectedFolderIdForEditing(state)
+  selectedFolderIdForEditing: getSelectedFolderIdForEditing(state),
 });
 
-const mapDispatchToProps = dispatch => ({
-  addNoteFromProps: note => dispatch(addNote(note)),
-  pressAddNoteNameBtn: value => dispatch(pressAddNoteNameBtn(value)),
-  changeFolderName: (noteName, noteId) =>
-    dispatch(changeNoteName(noteName, noteId)),
-  saveNoteId: noteId => dispatch(saveNoteId(noteId)),
+const mapDispatchToProps = (dispatch) => ({
+  addNoteFromProps: (note) => dispatch(addNote(note)),
+  pressAddNoteNameBtn: (value) => dispatch(pressAddNoteNameBtn(value)),
+  saveNoteId: (noteId) => dispatch(saveNoteId(noteId)),
   changeNoteBody: (noteBody, noteId) =>
     dispatch(changeNoteBody(noteBody, noteId)),
   changeNotesInThisFolder: (folderId, note) =>
     dispatch(changeNotesInThisFolder(folderId, note)),
   changeNoteBodyInNotesInThisFolder: (noteBody, noteId) =>
-    dispatch(changeNoteBodyInNotesInThisFolder(noteBody, noteId))
-});
+    dispatch(changeNoteBodyInNotesInThisFolder(noteBody, noteId)),
+})
 
-export default connect(mapStateToProps, mapDispatchToProps)(Notes);
+export default connect(mapStateToProps, mapDispatchToProps)(Notes)

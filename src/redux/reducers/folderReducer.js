@@ -9,15 +9,15 @@ import {
   DELETE_NOTE_IN_NOTES_IN_THIS_FOLDER_ON_DRAG_END,
   DELETE_SELECTED_ITEM,
   UPDATE_FOLDER_ALL,
-} from "../types";
+} from "../types"
 
 const initialState = [
   {
     folderId: "folderAllNotes",
     folderName: "All",
-    notesInThisFolder: []
-  }
-];
+    notesInThisFolder: [],
+  },
+]
 
 const folderReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -27,27 +27,27 @@ const folderReducer = (state = initialState, action) => {
         {
           folderId: action.folder.folderId,
           folderName: action.folder.folderName,
-          notesInThisFolder: []
-        }
-      ];
+          notesInThisFolder: [],
+        },
+      ]
 
     case DELETE_FOLDER:
-      return state.filter(folder => folder.folderId !== action.folderId);
+      return state.filter((folder) => folder.folderId !== action.folderId)
 
     case CHANGE_FOLDER_NAME:
-      return state.map(folder => {
+      return state.map((folder) => {
         if (
           action.folderId !== folder.folderId ||
           folder.folderName === action.folderName
         ) {
-          return folder;
+          return folder
         }
 
         return {
           ...folder,
           folderName: action.folderName
-        };
-      });
+        }
+      })
 
     case CHANGE_NOTES_IN_THIS_FOLDER:
       return state.map((folder, index) => {
@@ -57,19 +57,19 @@ const folderReducer = (state = initialState, action) => {
         ) {
           return {
             ...folder,
-            notesInThisFolder: [...folder.notesInThisFolder, action.note]
-          };
+            notesInThisFolder: [...folder.notesInThisFolder, action.note],
+          }
         }
 
         if (folder.folderId === action.folderId) {
           return {
             ...folder,
             notesInThisFolder: [...folder.notesInThisFolder, action.note]
-          };
+          }
         } else {
-          return folder;
+          return folder
         }
-      });
+      })
 
     case DELETE_NOTE_IN_NOTES_IN_THIS_FOLDER_ON_DRAG_END:
       return state.map((folder, index) => {
@@ -78,80 +78,80 @@ const folderReducer = (state = initialState, action) => {
           action.folderId === "folderAllNotes" &&
           action.folderId === folder.folderId
         ) {
-          return folder;
+          return folder
         }
 
         if (folder.folderId === action.folderId) {
           return {
             ...folder,
             notesInThisFolder: folder.notesInThisFolder.filter(
-              note => note.noteId !== action.noteId
+              (note) => note.noteId !== action.noteId
             )
-          };
+          }
         } else {
-          return folder;
+          return folder
         }
-      });
+      })
 
     case CHANGE_NOTE_BODY_IN_NOTES_IN_THIS_FOLDER:
-      return state.map(folder => {
+      return state.map((folder) => {
         return {
           ...folder,
-          notesInThisFolder: folder.notesInThisFolder.map(note => {
+          notesInThisFolder: folder.notesInThisFolder.map((note) => {
             if (
               action.noteId !== note.noteId ||
               action.noteBody === note.noteBody
             ) {
-              return note;
+              return note
             }
 
             return {
               ...note,
-              noteBody: action.noteBody
-            };
+              noteBody: action.noteBody,
+            }
           })
-        };
-      });
+        }
+      })
 
     case CHANGE_NOTE_NAME_IN_NOTES_IN_THIS_FOLDER:
-      return state.map(folder => {
+      return state.map((folder) => {
         return {
           ...folder,
-          notesInThisFolder: folder.notesInThisFolder.map(note => {
+          notesInThisFolder: folder.notesInThisFolder.map((note) => {
             if (
               action.noteId !== note.noteId ||
               action.noteName === note.noteName
             ) {
-              return note;
+              return note
             }
 
             return {
               ...note,
-              noteName: action.noteName
-            };
-          })
-        };
-      });
+              noteName: action.noteName,
+            }
+          }),
+        }
+      })
 
     case DELETE_NOTE_IN_NOTES_IN_THIS_FOLDER:
-      return state.map(folder => {
+      return state.map((folder) => {
         if (folder.notesInThisFolder.length === 0) {
           return {
             ...folder,
-            notesInThisFolder: []
-          };
+            notesInThisFolder: [],
+          }
         } else {
           return {
             ...folder,
             notesInThisFolder: folder.notesInThisFolder.filter(
-              note => note.noteId !== action.noteId
+              (note) => note.noteId !== action.noteId
             )
-          };
+          }
         }
-      });
+      })
 
     case DELETE_SELECTED_ITEM:
-      const selectedItemIdFromAction = action.selectedItemId;
+      const selectedItemIdFromAction = action.selectedItemId
 
       if (selectedItemIdFromAction.includes("folder")) {
         return state.filter((folder, index) => {
@@ -160,20 +160,20 @@ const folderReducer = (state = initialState, action) => {
             selectedItemIdFromAction === "folderAllNotes" &&
             selectedItemIdFromAction === folder.folderId
           ) {
-            return folder;
+            return folder
           } else {
-            return folder.folderId !== selectedItemIdFromAction;
+            return folder.folderId !== selectedItemIdFromAction
           }
-        });
+        })
       } else {
         return state.map(folder => {
           return {
             ...folder,
             notesInThisFolder: folder.notesInThisFolder.filter(
-              note => note.noteId !== selectedItemIdFromAction
+              (note) => note.noteId !== selectedItemIdFromAction
             )
-          };
-        });
+          }
+        })
       }
 
     case UPDATE_FOLDER_ALL:
@@ -185,23 +185,23 @@ const folderReducer = (state = initialState, action) => {
         ) {
           return {
             ...folder,
-            notesInThisFolder: folder.notesInThisFolder.filter(note => {
+            notesInThisFolder: folder.notesInThisFolder.filter((note) => {
               if (
                 action.arrayOfNotesIdThatWillBeDeleting.length > 0 &&
                 !action.arrayOfNotesIdThatWillBeDeleting.includes(note.noteId)
               ) {
-                return note;
+                return note
               }
             })
-          };
+          }
         } else {
-          return folder;
+          return folder
         }
-      });
+      })
 
     default:
-      return state;
+      return state
   }
-};
+}
 
-export default folderReducer;
+export default folderReducer

@@ -1,10 +1,10 @@
-import React from "react";
-import Button from "@material-ui/core/Button";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import NoteAddIcon from "@material-ui/icons/NoteAdd";
-import { connect } from "react-redux";
+import React from "react"
+import Button from "@material-ui/core/Button"
+import { makeStyles, withStyles } from "@material-ui/core/styles"
+import NoteAddIcon from "@material-ui/icons/NoteAdd"
+import { connect } from "react-redux"
 
-import { pressAddNoteNameBtn } from "../../redux/actions";
+import { pressAddNoteNameBtn } from "../../redux/actions"
 
 const StyledButton = withStyles({
   root: {
@@ -14,22 +14,22 @@ const StyledButton = withStyles({
     paddingLeft: 12,
     paddingRight: 0,
     minWidth: 38,
-    backgroundColor: "white"
+    backgroundColor: "white",
   },
   label: {
-    padding: 0
-  }
-})(Button);
+    padding: 0,
+  },
+})(Button)
 
 const useStyles = makeStyles(() => ({
   button: {
     marginTop: 6,
-    marginLeft: 8
-  }
-}));
+    marginLeft: 8,
+  },
+}))
 
 const AddNote = ({ pressAddNoteNameBtn }) => {
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <div>
@@ -39,17 +39,17 @@ const AddNote = ({ pressAddNoteNameBtn }) => {
         className={classes.button}
         startIcon={<NoteAddIcon />}
         onClick={() => {
-          pressAddNoteNameBtn(true);
+          pressAddNoteNameBtn(true)
         }}
       >
         {""}
       </StyledButton>
     </div>
-  );
-};
+  )
+}
 
-const mapDispatchToProps = dispatch => ({
-  pressAddNoteNameBtn: value => dispatch(pressAddNoteNameBtn(value))
-});
+const mapDispatchToProps = (dispatch) => ({
+  pressAddNoteNameBtn: (value) => dispatch(pressAddNoteNameBtn(value)),
+})
 
-export default connect(null, mapDispatchToProps)(AddNote);
+export default connect(null, mapDispatchToProps)(AddNote)
