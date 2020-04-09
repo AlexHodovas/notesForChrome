@@ -24,9 +24,6 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)",
 
     ["@media (max-width:1040px)"]: {// eslint-disable-line no-useless-computed-key
-      width: 800,
-    },
-    ["@media (max-width:820px)"]: {// eslint-disable-line no-useless-computed-key
       width: 550,
     },
     ["@media (max-width:599px)"]: {// eslint-disable-line no-useless-computed-key
@@ -39,9 +36,9 @@ const useStyles = makeStyles((theme) => ({
   notesPanel: {
     display: "flex",
     width: "100%",
-    ["@media (max-width:820px)"]: {// eslint-disable-line no-useless-computed-key
+    ["@media (max-width:1040px)"]: {// eslint-disable-line no-useless-computed-key
       flexDirection: "column",
-      width: 406,
+      width: 306,
     },
   },
   notesWhenFoldersHidden: {
@@ -61,6 +58,10 @@ const useStyles = makeStyles((theme) => ({
     borderRight: "1px solid rgb(153, 152, 152)",
     backgroundColor: "rgb(228, 226, 229)",
     borderBottomLeftRadius: 10,
+
+    ["@media (max-width:1040px)"]: {// eslint-disable-line no-useless-computed-key
+      width: 206,
+    },
   },
   hidden: {
     display: "none",

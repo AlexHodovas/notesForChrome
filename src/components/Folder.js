@@ -33,9 +33,6 @@ const useStyles = makeStyles({
     ["@media (max-width:1040px)"]: {// eslint-disable-line no-useless-computed-key
       minWidth: "60%",
     },
-    ["@media (max-width:600px)"]: {// eslint-disable-line no-useless-computed-key
-      maxWidth: "60%",
-    },
     ["@media (max-width:599px)"]: {// eslint-disable-line no-useless-computed-key
       fontSize: 16,
       padding: "10px 0 10px 20px",

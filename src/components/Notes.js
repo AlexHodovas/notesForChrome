@@ -42,15 +42,15 @@ const useStyles = makeStyles(() => ({
       height: 523,
       borderBottomRightRadius: 10,
 
-      ["media (max-width:1040px)"]: { // eslint-disable-line no-useless-computed-key
-        width: 240,
+      ["@media (max-width:1040px)"]: { // eslint-disable-line no-useless-computed-key
+        width: 303,
+        height: 82,
       },
       ["@media (max-width:820px)"]: { // eslint-disable-line no-useless-computed-key
-        width: 300,
-        height: 120,
+        height: 121,
       },
       ["@media (max-width:600px)"]: { // eslint-disable-line no-useless-computed-key
-        width: "54vw",
+        width: "51vw",
         height: 222,
       },
       ["@media (max-width:599px)"]: { // eslint-disable-line no-useless-computed-key
@@ -61,9 +61,9 @@ const useStyles = makeStyles(() => ({
     "& .MuiInputBase-inputMultiline": {
       height: 446,
 
-      ["@media (max-width:820px)"]: { // eslint-disable-line no-useless-computed-key
+      ["@media (max-width:1040px)"]: { // eslint-disable-line no-useless-computed-key
         paddingTop: 10,
-        height: 80,
+        height: 50,
       },
       ["@media (max-width:600px)"]: { // eslint-disable-line no-useless-computed-key
         paddingTop: 20,
@@ -116,12 +116,8 @@ const StyledTextFieldWhenFoldersHidden = withStyles(() => ({
       width: 698,
 
       ["@media (max-width:1040px)"]: { // eslint-disable-line no-useless-computed-key
-       width: 497,
-      },
-
-      ["@media (max-width:820px)"]: { // eslint-disable-line no-useless-computed-key
-        width: 246,
-        height: 522,
+       width: 247,
+       height: 522,
       },
 
       ["@media (max-width:600px)"]: { // eslint-disable-line no-useless-computed-key
@@ -130,6 +126,11 @@ const StyledTextFieldWhenFoldersHidden = withStyles(() => ({
     },
 
     "& .MuiInputBase-inputMultiline": {
+      ["@media (max-width:1040px)"]: { // eslint-disable-line no-useless-computed-key
+        paddingTop: 10,
+        height: 446,
+      },
+
       ["@media (max-width:820px)"]: { // eslint-disable-line no-useless-computed-key
         height: 454,
        },
